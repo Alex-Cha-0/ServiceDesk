@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{#{% block nav %} {% include 'inc/_nav.html' %} {% endblock %}#}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block messages %} {% endblock %}
+
+
+{#{% block buttons %}#}
+{##}
+{#    <div class="btn-block" role="group">#}
+{#        <button class="btn btn-secondary" type="button" onclick="location.href='{% url 'new' %}'">Новые#}
+{#        </button>#}
+{#        <button class="btn btn-secondary" type="button" onclick="location.href='{% url 'home' %}'">Показать#}
+{#            все#}
+{#        </button>#}
+{##}
+{#        <button class="btn btn-secondary" type="button" onclick="location.href='{% url 'accepted' %}'">#}
+{#            Принятые#}
+{#        </button>#}
+{##}
+{#        <button class="btn btn-secondary" type="button" onclick="location.href='{% url 'close' %}'">#}
+{#            Закрытые#}
+{#        </button>#}
+{##}
+{#        {% if request.user.is_authenticated %}#}
+{#            <button type="button" class="btn btn-secondary" onclick="location.href='{% url 'add_order' %}'">Создать#}
+{#                заявку#}
+{#            </button>#}
+{#        {% endif %}#}
+{##}
+{#        {% block dropdown %} {% include 'inc/_dropdown_links.html' %} {% endblock %}#}
+{#    </div>#}
+{##}
+{#{% endblock %}#}
+{##}
+{##}
+{##}
+{#{% block table %}#}
+{#    <div class="col-lg-12">#}
+{#        <table class="table table-striped" id="myTable2">#}
+{#            <caption>Список заявок</caption>#}
+{#            <tbody>#}
+{#            <tr>#}
+{#                <th scope="col" onclick="sortTable(0)">id</th>#}
+{#                <th scope="col" onclick="sortTable(1)">Тема</th>#}
+{#                <th scope="col" onclick="sortTable(2)">Автор</th>#}
+{#                <th scope="col" onclick="sortTable(3)">Назначен специалист</th>#}
+{#                <th scope="col" onclick="sortTable(4)">Копия</th>#}
+{#                <th scope="col" onclick="sortTable(5)">Дата создания</th>#}
+{#                <th scope="col" onclick="sortTable(6)">Вложение</th>#}
+{#                <th scope="col" onclick="sortTable(6)">Actions</th>#}
+{#            </tr>#}
+{#            {% for data in content %}#}
+{#                {% if data.open_order %}#}
+{#                    <tr class="table-success">#}
+{#                        {% elif data.close_order %}#}
+{#                    <tr class="table-dark">#}
+{#                        {% else %}#}
+{#                    <tr class="table-primary">#}
+{#                {% endif %}#}
+{#                <td><a href="{{ data.get_absolute_url }}">{{ data.id }}</a></td>#}
+{#                <td>{{ data.subject }}</td>#}
+{#                <td>{{ data.sender_name }}</td>#}
+{#                <td>{{ data.specialist }}</td>#}
+{#                <td>{{ data.copy }}</td>#}
+{#                <td>{{ data.datetime_send|date:"d.m.Y H:m:s" }}</td>#}
+{#                <td>{{ data.yes_no_attach }}</td>#}
+{#                <td>#}
+{##}
+{#                    <a href="{% url "open_order" message_id=data.id %}" class="link-info">Принять</a>#}
+{#                    <a href="{% url "close_order" message_id=data.id %}" class="link-info">Закрыть</a>#}
+{#                    <button type="button" class="btn btn-outline-danger"><i class="bi bi-file-earmark-x-fill"></i>#}
+{#                    </button>#}
+{#                </td>#}
+{#            {% endfor %}#}
+{##}
+{#            </tbody>#}
+{#        </table>#}
+{##}
+{#    </div> {% endblock %}#}
+{##}
+{#{% block pagination %}#}
+{#    {% if page_obj.has_other_pages %}#}
+{#        <nav aria-label="Page navigation example">#}
+{#            <ul class="pagination justify-content-center">#}
+{#                {% if page_obj.has_previous %}#}
+{#                    <li class="page-item">#}
+{#                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>#}
+{#                    </li>#}
+{#                {% endif %}#}
+{##}
+{#                {% for p in page_obj.paginator.page_range %}#}
+{##}
+{#                    {% if page_obj.number == p %}#}
+{#                        <li class="page-item active" aria-current="page">#}
+{#                            <a class="page-link" href="?page={{ p }}">{{ p }}<span class="sr-only">(current)</span></a>#}
+{#                        </li>#}
+{#                    {% elif p > page_obj.number|add:-3 and p < page_obj.number|add:3 %}#}
+{#                        <li class="page-item">#}
+{#                            <a class="page-link" href="?page={{ p }}">{{ p }}</a></li>#}
+{#                    {% endif %}#}
+{#                {% endfor %}#}
+{##}
+{#                {% if page_obj.has_next %}#}
+{#                    <li class="page-item">#}
+{#                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>#}
+{#                    </li>#}
+{#                {% endif %}#}
+{##}
+{#            </ul>#}
+{#        </nav>#}
+{#    {% endif %}#}
+{#{% endblock %}#}
+
+
+
+
+
+
+
+
+
+

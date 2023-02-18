@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block nav %} {% include 'inc/_nav.html' %} {% endblock %}
+
+{% block title %} add_order:: {{ block.super }} {% endblock %}
+
+{% block content %} <h3 align="center">Добавить</h3>
+    <div class="container">
+    <div class="row justify-content-center">
+    <div class="col text-center">
+    <form action="{% url 'add_order' %}" method="post">
+        {% csrf_token %}
+
+
+        {{ form.as_p }}
+
+
+        <button type="submit" class="btn-outline-primary btn-block">Добавить заявку</button>
+
+    </form>
+    </div>
+    </div>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

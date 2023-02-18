@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Message: {{ data.id }} от {{ data.sender_name }} :: {{ block.super }} {% endblock %}
+
+{% block table %} {% endblock %}
+{% block buttons %} {% endblock %}
+
+{% block content %}
+
+    <br>
+    <div class="container">
+        <div class="row row-cols-3">
+            <div class="col-6">
+                <div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-2">
+                    {{ data.text_body|safe }}
+                </div>
+                {#                <a href="{% url "send_email" message_id=data.id %}" class="link-primary">Ответить</a>#}
+                <br>
+                {% for attach in attachment %}
+                    <a href="{{ dir }}{{ attach.link }}"
+                       class="link-info p-2 border rounded-2 bs-popover-right">{{ attach.name }}</a>
+                {% endfor %}
+            </div>
+            <div class="col-5 col-md-4">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ data.sender_name }}</h5>
+                            <small>{{ data.datetime_send|date:"d.m.Y H:m:s" }}</small>
+                        </div>
+                        <p class="mb-1">{{ data.subject }}</p>
+                        <small>{{ data.sender_email }}</small>
+                    </a>
+                </div>
+
+
+
+                {# Чат версия 1.0 #}
+                <div class="container content">
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card">
+                                <div class="card-header">Общение с {{ data.sender_name }} {chat_id = {{ data.id }}}</div>
+                                <div class="card-body height3">
+                                    <ul class="chat-list">
+                                        {% for cont in chat_data %}
+                                            {% if cont.sender == 1 %}
+                                                <li class="in">
+                                                    {% else %}
+                                                <li class="out">
+                                            {% endif %}
+                                        <div class="chat-body">
+                                            <div class="chat-message">
+                                                <h5>{{ cont.user_name }}</h5>
+                                                <p>{{ cont.content }}</p>
+                                                <small class="text-muted text-white-50">{{ cont.datetime_send }}</small>
+                                            </div>
+                                        </div>
+
+                                        </li>
+                                        {% endfor %}
+                                        <a href="{% url "send_email" message_id=data.id %}" class="link-primary">Ответить</a>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+

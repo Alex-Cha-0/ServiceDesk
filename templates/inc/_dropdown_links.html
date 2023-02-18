@@ -1,0 +1,21 @@
+{% load app_tags %}
+{% get_staff as staff %}
+
+<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+   aria-haspopup="true" aria-expanded="false">
+    Специалист
+</a>
+
+<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+    {% if staff %}
+        {% for item in staff %}
+            {#    <a class="dropdown-item" href="{{ item.get_absolute_url }}">{{ item.last_name }} {{ item.first_name }}</a>#}
+            <a class="dropdown-item" href="{{ item.get_absolute_url }}">рабочая группа {{ item.group }}
+                - {{ item.user }}</a>
+        {% endfor %}
+     {% else %}
+        <a class="dropdown-item" href="">рабочая группа</a>
+    {% endif %}
+</div>
+
+

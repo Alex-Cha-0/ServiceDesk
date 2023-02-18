@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %} Отправка писем :: {{ block.super }} {% endblock %}
+{% block table %} {% endblock %}
+{% block buttons %} {% endblock %}
+
+{% block content %}
+
+    <div class="container min-vh-100 d-flex justify-content-center align-items-center">
+        <form method="post">
+            {% csrf_token %}
+            <h3 align="center">Ответить на E-mail</h3>
+            <br>
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-outline-primary btn-block">Отправить</button>
+            <br>
+            <br>
+        </form>
+    </div>
+{% endblock %}

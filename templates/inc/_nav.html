@@ -1,0 +1,45 @@
+{% load app_tags %}
+{% get_count_new_order as count_new %}
+{% get_count_in_work as count_in_work %}
+
+
+<nav class="navbar navbar-dark bg-secondary">
+    <a class="navbar-brand" href="{% url 'home' %}">Servise Desk</a>
+    <form class="form-inline">
+    </form>
+
+    <form class="form-inline my-2 my-lg-0">
+
+        <span class="btn-block">
+            <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Поиск</button>
+
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+            Новых <span class="badge badge-danger">{{ count_new }}</span>
+            </button>
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+            В работе <span class="badge badge-danger">{{ count_in_work }}</span>
+            </button>
+
+            <span class="navbar-text">
+                {% if request.user.is_authenticated %}
+                    Привет, <u> {{ request.user.first_name }} {{ request.user.last_name }}</u> |
+                    <a href="{% url 'logout' %}">Выход</a>
+                {% else %}
+                    {#                 <a href="{% url 'register' %}">Register</a> | <a href="{% url 'login' %}">Login</a>#}
+
+                    <div class="btn btn-one" onclick="location.href='{% url 'register' %}'">
+                    <span>register</span>
+                    </div>
+                    <div class="btn btn-one" onclick="location.href='{% url 'login' %}'">
+                    <span>login</span>
+                    </div>
+                {% endif %}
+
+
+            </span>
+        </span>
+
+    </form>
+
+</nav>

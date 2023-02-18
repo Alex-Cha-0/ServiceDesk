@@ -1,0 +1,7 @@
+<div class="container min-vh-100 d-flex justify-content-center align-items-center">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-outline-primary btn-block">Отправить</button>
+    </form>
+</div>
