@@ -21,16 +21,21 @@ class MailSettings(models.Model):
     port = models.IntegerField()
     user = models.CharField(max_length=100)
     password = models.CharField(max_length=256)
-    use_tls = models.BooleanField()
+    use_tls = models.BooleanField(verbose_name='Start task')
 
     class Meta:
         managed = False
         db_table = 'mail_settings'
 
+    @property
+    def use_tls_stat(self):
+        return self.use_tls
     # def save(self, *args, **kwargs):
     #
-    #     self.password = make_password(self.password)
+    #     self.use_tls = make_password(self.password)
     #     super(MailSettings, self).save(*args, **kwargs)
+    def __getstate__(self):
+        print(self.use_tls)
 
 
 class Chat(models.Model):

@@ -2,11 +2,13 @@ from datetime import datetime
 import time
 from datetime import timedelta
 
+from celery import current_app
 from django.conf import settings
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models.functions import Lower
-from django.http import request
+from django.http import request, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView
 
 from .admin import EmailSettingsForm
@@ -30,7 +32,7 @@ def send_email(request, message_id):
         new_p2 = soup.new_tag('p')
         new_hr = soup.new_tag('hr')
         new_p.string = content
-        new_p2.string = 'date: ' + str(data.datetime_send)
+        new_p2.string = 'date: ' + str(datetime.now())
         div_tag = soup.find('div')
 
         div_tag.insert_before(new_p, new_p2, new_hr)
@@ -131,7 +133,6 @@ class HomeApp(MyMixin, ListView):
         context['title'] = self.get_upper('Главная страница')
         message_id = self.kwargs.get('message_id', None)
         context['data_message'] = Attachments.objects.all()
-
         return context
 
     def get_queryset(self):
@@ -210,8 +211,6 @@ class GetMessage(LoginRequiredMixin, DetailView):
         context['dir'] = settings.DIRECTORY_ATTACHMENTS
         context['chat_data'] = Chat.objects.filter(chat_id=message_id)
         return context
-
-
 
 
 class CreateOrder(LoginRequiredMixin, CreateView):
@@ -305,3 +304,22 @@ def delete_order(requests, message_id):
         'content': model
     }
     return render(requests, 'index.html', context)
+
+
+# class DeleteChatMessage(LoginRequiredMixin, DetailView):
+#     model = Email
+#     template_name = "message.html"
+#     context_object_name = 'data'
+#     raise_exception = True
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super(DeleteChatMessage, self).get_context_data(**kwargs)
+#         message_id = self.kwargs.get('pk', None)
+#         context['attachment'] = Attachments.objects.filter(id_email=message_id)
+#         context['dir'] = settings.DIRECTORY_ATTACHMENTS
+#         context['chat_data'] = Chat.objects.filter(chat_id=message_id)
+#         return redirect(f'/message/{message_id}')
+def delete_chat_message(request, chat_message_id, chat_id):
+    mod = Chat.objects.get(pk=chat_message_id)
+    mod.delete()
+    return redirect(f'/message/{chat_id}')

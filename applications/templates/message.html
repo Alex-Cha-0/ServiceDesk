@@ -35,13 +35,13 @@
                 </div>
 
 
-
                 {# Чат версия 1.0 #}
                 <div class="container content">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="card">
-                                <div class="card-header">Общение с {{ data.sender_name }} {chat_id = {{ data.id }}}</div>
+                                <div class="card-header">Общение с {{ data.sender_name }} {chat_id = {{ data.id }}}
+                                </div>
                                 <div class="card-body height3">
                                     <ul class="chat-list">
                                         {% for cont in chat_data %}
@@ -52,6 +52,11 @@
                                             {% endif %}
                                         <div class="chat-body">
                                             <div class="chat-message">
+                                                {{ cont.id}}
+                                                <a class="link-danger" title="Удалить запись"
+                                                   href="{% url "delete_chat_message" chat_id=cont.chat_id chat_message_id=cont.id %}"
+                                                   onclick="return configMsgDeleteOrder();"><i
+                                                        class="bi bi-x-square"></i></a>
                                                 <h5>{{ cont.user_name }}</h5>
                                                 <p>{{ cont.content }}</p>
                                                 <small class="text-muted text-white-50">{{ cont.datetime_send }}</small>
