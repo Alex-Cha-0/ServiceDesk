@@ -52,11 +52,10 @@
                                             {% endif %}
                                         <div class="chat-body">
                                             <div class="chat-message">
-                                                {{ cont.id}}
-                                                <a class="link-danger" title="Удалить запись"
+                                                <a class="link-light" title="Удалить запись"
                                                    href="{% url "delete_chat_message" chat_id=cont.chat_id chat_message_id=cont.id %}"
                                                    onclick="return configMsgDeleteOrder();"><i
-                                                        class="bi bi-x-square"></i></a>
+                                                        class="bi bi-trash2"></i></a>
                                                 <h5>{{ cont.user_name }}</h5>
                                                 <p>{{ cont.content }}</p>
                                                 <small class="text-muted text-white-50">{{ cont.datetime_send }}</small>
