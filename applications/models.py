@@ -34,8 +34,6 @@ class MailSettings(models.Model):
     #
     #     self.use_tls = make_password(self.password)
     #     super(MailSettings, self).save(*args, **kwargs)
-    def __getstate__(self):
-        print(self.use_tls)
 
 
 class Chat(models.Model):

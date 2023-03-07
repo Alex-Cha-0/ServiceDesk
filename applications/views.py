@@ -26,16 +26,27 @@ def send_email(request, message_id):
     data = Email.objects.get(id=message_id)
 
     def edit_body(html_body, content):
+        cont_from_chat = Chat.objects.filter(chat_id=message_id).order_by('-datetime_send')
         soup = BeautifulSoup(html_body, 'html.parser')
 
-        new_p = soup.new_tag("p")
-        new_p2 = soup.new_tag('p')
-        new_hr = soup.new_tag('hr')
-        new_p.string = content
-        new_p2.string = 'date: ' + str(datetime.now())
-        div_tag = soup.find('div')
-
-        div_tag.insert_before(new_p, new_p2, new_hr)
+        # new_p = soup.new_tag("p")
+        # new_p2 = soup.new_tag('p')
+        # new_hr = soup.new_tag('hr')
+        # new_p.string = content
+        # new_p2.string = 'date: ' + str(datetime.now())
+        # div_tag = soup.find('div')
+        f = '%Y-%m-%d %H:%M:%S'
+        for cont in cont_from_chat:
+            new_p = soup.new_tag("p")
+            new_p2 = soup.new_tag('p')
+            new_p3 = soup.new_tag('p')
+            new_hr = soup.new_tag('hr')
+            new_p3.string = cont.user_name
+            new_p.string = cont.content
+            new_p2.string = 'date: ' + cont.datetime_send.strftime(f)
+            div_tag = soup.find('div')
+            div_tag.insert_before(new_p3, new_p, new_p2, new_hr)
+        #div_tag.insert_before(new_p, new_p2, new_hr)
         my_html_string = str(soup).replace("'", '')
 
         return my_html_string
@@ -49,13 +60,16 @@ def send_email(request, message_id):
             to = [form.cleaned_data['to']]
             cc = [form.cleaned_data['cc_myself']]
 
+            chat_model = Chat(chat_id=data.id, user_name=f'{request.user.first_name} {request.user.last_name}',
+                              content=content, sender=1)
+            chat_model.save()
+
             mail = EmailMessage(subject=subject, body=edit_body(data.text_body, content),
                                 from_email=settings.EMAIL_HOST_USER, to=to, cc=cc)
             mail.content_subtype = 'html'
             mail.send(fail_silently=False)
 
-            chat_model = Chat(chat_id=data.id, user_name=request.user, content=content, sender=1)
-            chat_model.save()
+
 
             if mail.send:
                 messages.success(request, 'Письмо отправлено')
