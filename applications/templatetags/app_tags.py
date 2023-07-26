@@ -1,6 +1,7 @@
 from django import template
 
-from applications.models import Email, AuthUser, AuthUserGroups, Chat
+from applications.models import Email, AuthUser, AuthUserGroups, MailSettings
+
 
 register = template.Library()
 
@@ -33,4 +34,6 @@ def get_count_in_work():
 # def get_quary_chat(context):
 #     message_id = context['id']
 #     return Chat.objects.filter(chat_id=message_id)
+
+
 

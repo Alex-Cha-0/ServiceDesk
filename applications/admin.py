@@ -25,6 +25,7 @@ class EmailSettingsForm(forms.ModelForm):
 
 
 
+
 class EmailAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'subject', 'sender_name', 'datetime_send', 'uid_division', 'open_order', 'close_order', 'specialist',
