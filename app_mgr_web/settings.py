@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-rs7_d2c!^1zt*ns5m6e&7e!bqvje=47xwvwbq)q%(^-!ftp9#=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.1.2.113']
+ALLOWED_HOSTS = ['10.1.2.129']
 
 # Application definition
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'applications.apps.ApplicationsConfig',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,10 @@ EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 DIRECTORY_ATTACHMENTS = 'http://10.1.0.31:9800/app_manager/attachments/'
+
+# celery
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'

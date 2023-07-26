@@ -23,6 +23,7 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-reboot.rtl.css' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-utilities.css' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-utilities.rtl.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/message.css' %}"/>
 
     </head>
 </div>
@@ -96,7 +97,7 @@
         <div class="container">
             <div class="row">
 
-                <table class="table table-sm">
+                <table class="table table-sm" id="table2">
                     <caption>Список заявок</caption>
 
                     <tbody>
@@ -138,11 +139,14 @@
                             {#                                        class="bi bi-x-square"></i>#}
                             {#                                </button>#}
                             <a class="link-primary" title="Принять"
-                               href="{% url "open_order" message_id=data.id %}" onclick="return confirmMsgApplyOrder();"><i class="bi bi-plus-square"></i></a>
+                               href="{% url "open_order" message_id=data.id %}"
+                               onclick="return confirmMsgApplyOrder();"><i class="bi bi-plus-square"></i></a>
                             <a class="link-success" title="Закрыть"
-                               href="{% url "close_order" message_id=data.id %}" onclick="return configMsgCloseOrder();"><i class="bi bi-check-square"></i></a>
+                               href="{% url "close_order" message_id=data.id %}"
+                               onclick="return configMsgCloseOrder();"><i class="bi bi-check-square"></i></a>
                             <a class="link-danger" title="Удалить запись"
-                               href="{% url "delete" message_id=data.id %}" onclick="return configMsgDeleteOrder();"><i class="bi bi-x-square"></i></a>
+                               href="{% url "delete" message_id=data.id %}" onclick="return configMsgDeleteOrder();"><i
+                                    class="bi bi-x-square"></i></a>
                         </td>
 
                         {% if data.yes_no_attach %}

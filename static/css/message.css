@@ -1,0 +1,39 @@
+.body-message {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.message-info {
+    margin-right: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+}
+
+.message-info-content {
+    padding: 10px 10px;
+}
+
+.message-attachments p{
+    padding: 5px 5px;
+}
+.message-attachments a{
+    text-decoration: none;
+}
+.body-text-body {
+    padding: 10px 10px;
+    margin-right: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    max-width: 70%;
+    max-height: 70%;
+
+}
+
+.body-text-body img {
+    max-width: 100%;
+!important;
+    max-height: 100% !important;
+    object-fit: fill;
+}
+

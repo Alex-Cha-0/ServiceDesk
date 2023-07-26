@@ -22,6 +22,7 @@ from bs4 import BeautifulSoup
 
 def send_email(request, message_id):
     data = Email.objects.get(id=message_id)
+    chat_data = Chat.objects.filter(chat_id=message_id)
 
     def edit_body(html_body, content):
         soup = BeautifulSoup(html_body, 'html.parser')
@@ -32,10 +33,23 @@ def send_email(request, message_id):
         new_p.string = content
         new_p2.string = 'date: ' + str(data.datetime_send)
         div_tag = soup.find('div')
+        solid_hr = soup.new_tag('hr')
+        solid_hr['style'] = " height: 12px;" \
+                            "border: 0;" \
+                            "box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);"
+
+        for i in chat_data:
+            hr = soup.new_tag('hr')
+            hr['style'] = " border: 0;" \
+                          "height: 0;" \
+                          "border-top: 1px solid rgba(0, 0, 0, 0.1);" \
+                          "border-bottom: 1px solid rgba(255, 255, 255, 0.3);"
+            chat_content = soup.new_tag('p')
+            chat_content.string = f'{i.user_name, i.content, str(i.datetime_send)}'
+            div_tag.insert_before(hr, chat_content)
 
         div_tag.insert_before(new_p, new_p2, new_hr)
         my_html_string = str(soup).replace("'", '')
-
         return my_html_string
 
     if request.method == 'POST':
@@ -210,8 +224,6 @@ class GetMessage(LoginRequiredMixin, DetailView):
         context['dir'] = settings.DIRECTORY_ATTACHMENTS
         context['chat_data'] = Chat.objects.filter(chat_id=message_id)
         return context
-
-
 
 
 class CreateOrder(LoginRequiredMixin, CreateView):
