@@ -45,8 +45,17 @@ def send_email(request, message_id):
                           "border-top: 1px solid rgba(0, 0, 0, 0.1);" \
                           "border-bottom: 1px solid rgba(255, 255, 255, 0.3);"
             chat_content = soup.new_tag('p')
-            chat_content.string = f'{i.user_name, i.content, str(i.datetime_send)}'
-            div_tag.insert_before(hr, chat_content)
+
+            if i.sender == 1:
+                chat_content.string = f'{i.user_name, i.content, str(i.datetime_send)}'
+                div_tag.insert_before(hr, chat_content)
+            else:
+                chat_content.string = f'{i.user_name, i.content, str(i.datetime_send)}'
+                chat_content['style'] = "float: right;" \
+                                        "margin-right: 20px;"\
+                                        "text-align: right;"
+                div_tag.insert_before(hr, chat_content)
+
 
         div_tag.insert_before(new_p, new_p2, new_hr)
         my_html_string = str(soup).replace("'", '')
