@@ -39,23 +39,45 @@ def send_email(request, message_id):
                             "box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);"
 
         for i in chat_data:
-            hr = soup.new_tag('hr')
-            hr['style'] = " border: 0;" \
-                          "height: 0;" \
-                          "border-top: 1px solid rgba(0, 0, 0, 0.1);" \
-                          "border-bottom: 1px solid rgba(255, 255, 255, 0.3);"
-            chat_content = soup.new_tag('p')
+            # hr = soup.new_tag('hr')
+            # hr['style'] = " border: 0;" \
+            #               "height: 0;" \
+            #               "border-top: 1px solid rgba(0, 0, 0, 0.1);" \
+            #               "border-bottom: 1px solid rgba(255, 255, 255, 0.3);"
+            chat_div = soup.new_tag("div")
+            chat_username = soup.new_tag("h5")
+            chat_content = soup.new_tag("p")
+            chat_datetime = soup.new_tag("small")
 
             if i.sender == 1:
-                chat_content.string = f'{i.user_name, i.content, str(i.datetime_send)}'
-                div_tag.insert_before(hr, chat_content)
-            else:
-                chat_content.string = f'{i.user_name, i.content, str(i.datetime_send)}'
-                chat_content['style'] = "float: right;" \
-                                        "margin-right: 20px;"\
-                                        "text-align: right;"
-                div_tag.insert_before(hr, chat_content)
+                # Blue color
 
+                chat_username.string = i.user_name
+                chat_content.string = i.content
+                chat_datetime.string = str(i.datetime_send)
+                chat_div.insert(1, chat_username)
+                chat_div.insert(2, chat_content)
+                chat_div.insert(3, chat_datetime)
+                chat_div['style'] = "background: #5a99ee;" \
+                                    "color: white;" \
+                                    "margin-right: 50px;" \
+                                    "float: left;"
+                div_tag.insert_before(chat_div)
+            else:
+                # Orange color
+
+                chat_username.string = i.user_name
+                chat_content.string = i.content
+                chat_datetime.string = str(i.datetime_send)
+                chat_div.insert(1, chat_username)
+                chat_div.insert(2, chat_content)
+                chat_div.insert(3, chat_datetime)
+                chat_div['style'] = "float: right;" \
+                                    "margin-left: 50px;" \
+                                    "text-align: right;" \
+                                    "background: #fc6d4c;" \
+                                    "color: white;"
+                div_tag.insert_before(chat_div)
 
         div_tag.insert_before(new_p, new_p2, new_hr)
         my_html_string = str(soup).replace("'", '')
@@ -75,7 +97,8 @@ def send_email(request, message_id):
             mail.content_subtype = 'html'
             mail.send(fail_silently=False)
 
-            chat_model = Chat(chat_id=data.id, user_name=request.user, content=content, sender=1)
+            chat_model = Chat(chat_id=data.id, user_name=f"{request.user.last_name} {request.user.first_name}",
+                              content=content, sender=1)
             chat_model.save()
 
             if mail.send:

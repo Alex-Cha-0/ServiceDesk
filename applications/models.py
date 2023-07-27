@@ -55,7 +55,7 @@ class Chat(models.Model):
 
 class Attachments(models.Model):
     link = models.TextField(db_column='Link', blank=True, null=True)  # Field name made lowercase.
-    id_email = models.ForeignKey('Email', models.DO_NOTHING, db_column='id_email', blank=True, null=True)
+    id_email = models.ForeignKey('Email', on_delete=models.CASCADE, db_column='id_email', blank=True, null=True)
     id = models.AutoField(db_column='ID', primary_key=True)
     name = models.CharField(blank=True, null=True, max_length=150)
 
