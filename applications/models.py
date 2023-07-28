@@ -245,6 +245,7 @@ class Email(models.Model):
     uid_division = models.ForeignKey(Division, models.DO_NOTHING, db_column='uid_Division', blank=True,
                                      null=True)  # Field name made lowercase.
     html_body = models.TextField(blank=True, null=True)
+    date_accepted = models.DateTimeField(blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse('message', kwargs={'pk': self.pk})

@@ -14,10 +14,10 @@
             <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">
             <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Поиск</button>
 
-            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+            <button class="btn btn-outline-light my-2 my-sm-0" type="button" onclick="location.href='{% url 'new' %}'">
             Новых <span class="badge badge-danger">{{ count_new }}</span>
             </button>
-            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+            <button class="btn btn-outline-light my-2 my-sm-0" type="button" onclick="location.href='{% url 'accepted_by_user' %}'">
             В работе <span class="badge badge-danger">{{ count_in_work }}</span>
             </button>
 

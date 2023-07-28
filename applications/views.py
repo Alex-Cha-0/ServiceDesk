@@ -199,6 +199,21 @@ class HomeByAccepted(ListView):
         return Email.objects.filter(open_order=True)
 
 
+class AcceptedByUser(ListView):
+    model = Email
+    template_name = 'index.html'
+    context_object_name = 'content'
+    paginate_by = 15
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Принятые {self.request.user}'
+        return context
+
+    def get_queryset(self):
+        return Email.objects.filter(specialist=self.request.user.id, open_order=True)
+
+
 class HomeByClosed(ListView):
     model = Email
     template_name = 'index.html'
@@ -308,6 +323,7 @@ class OpenOrder(LoginRequiredMixin, ListView):
         mod.close_order = 0
         mod.specialist = spec
         mod.control_period = mod.datetime_send + timedelta(days=10)
+        mod.date_accepted = datetime.now()
         mod.save()
         return Email.objects.filter(close_order=False)
 

@@ -15,9 +15,11 @@
     <div class="message-info">
         <div class="message-info-content">
             <h6>Отправитель - {{ data.sender_name }}</h6>
-            <p class="mb-1"><small>Дата - {{ data.datetime_send|date:"d.m.Y H:m:s" }}</small></p>
-            <p class="mb-1"><small>Тема - {{ data.subject }}</small></p>
-            <p class="mb-1"><small>Email - {{ data.sender_email }}</small></p>
+            <p class="mb-1"><small><b>Создана</b> - {{ data.datetime_send }}</small></p>
+            <p class="mb-1"><small><b>Принята</b> - {{ data.date_accepted }}</small></p>
+            <p class="mb-1"><small><b>Срок</b> - {{ data.control_period }}</small></p>
+            <p class="mb-1"><small><b>Тема</b> - {{ data.subject }}</small></p>
+            <p class="mb-1"><small><b>Email</b> - {{ data.sender_email }}</small></p>
         </div>
         <div class="message-attachments">
         {% for attach in attachment %}
