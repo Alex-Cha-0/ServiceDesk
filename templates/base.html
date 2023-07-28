@@ -103,7 +103,7 @@
 
                     <tbody>
                     <tr>
-                        <th scope="col" onclick="sortTable(0)">Actions</th>
+                        <th scope="col" onclick="sortTable(0)">Действия</th>
                         <th scope="col" onclick="sortTable(1)"></th>
                         <th scope="col" onclick="sortTable(2)">id</th>
                         <th scope="col" onclick="sortTable(3)">Тема</th>
@@ -139,9 +139,16 @@
                             {#                                        onclick="location.href='{% url "delete" message_id=data.id %}'"><i#}
                             {#                                        class="bi bi-x-square"></i>#}
                             {#                                </button>#}
-                            <a class="link-primary" title="Принять"
-                               href="{% url "open_order" message_id=data.id %}"
-                               onclick="return confirmMsgApplyOrder();"><i class="bi bi-plus-square"></i></a>
+                            {% if data.open_order %}
+                                <a class="link-dark" title="Принять"
+                                   href=""
+                                   onclick="return ifOpenOrder();"><i class="bi bi-plus-square"></i></a>
+                            {% else %}
+                                <a class="link-primary" title="Принять"
+                                   href="{% url "open_order" message_id=data.id %}"
+                                   onclick="return confirmMsgApplyOrder();"><i class="bi bi-plus-square"></i></a>
+                            {% endif %}
+
                             <a class="link-success" title="Закрыть"
                                href="{% url "close_order" message_id=data.id %}"
                                onclick="return configMsgCloseOrder();"><i class="bi bi-check-square"></i></a>

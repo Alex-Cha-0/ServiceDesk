@@ -304,6 +304,7 @@ class CloseOrder(LoginRequiredMixin, ListView):
         mod = Email.objects.get(id=message_id)
         mod.open_order = 0  # change field
         mod.close_order = 1
+        mod.date_complited = datetime.now()
         mod.save()
         return Email.objects.filter(close_order=False)
 

@@ -12,10 +12,15 @@
 
 .message-info-content {
     padding: 10px 10px;
+    background-color: azure;
+}
+
+.message-attachments {
+    padding: 10px 10px;
 }
 
 .message-attachments p{
-    padding: 5px 5px;
+    padding: 10px 10px;
 }
 .message-attachments a{
     text-decoration: none;
@@ -37,5 +42,7 @@
     object-fit: fill;
 }
 
-
+.action-button {
+    padding: 3px;
+}
 

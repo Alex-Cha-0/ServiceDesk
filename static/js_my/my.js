@@ -10,3 +10,7 @@ function configMsgCloseOrder() {
 function configMsgDeleteOrder() {
     return confirm("Удалить заявку?")
 }
+
+function ifOpenOrder() {
+    return confirm("Заявка уже принята")
+}
