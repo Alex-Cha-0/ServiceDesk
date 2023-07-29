@@ -19,12 +19,14 @@
     padding: 10px 10px;
 }
 
-.message-attachments p{
+.message-attachments p {
     padding: 10px 10px;
 }
-.message-attachments a{
+
+.message-attachments a {
     text-decoration: none;
 }
+
 .body-text-body {
     padding: 10px 10px;
     margin-right: 20px;
@@ -46,3 +48,49 @@
     padding: 3px;
 }
 
+.message-close-red {
+    background-color: #e5c7ca;
+}
+
+.message-close-green {
+    background-color: #8fd19e;
+}
+
+.message-control-period {
+    background-color: #1c87c9;
+}
+@keyframes good_period {
+    0% {
+        background-color: #2ba805;
+        box-shadow: 0 0 3px #2ba805;
+    }
+    50% {
+        background-color: #49e819;
+        box-shadow: 0 0 10px #49e819;
+    }
+    100% {
+        background-color: #2ba805;
+        box-shadow: 0 0 3px #2ba805;
+    }
+}
+@keyframes bad_period {
+    0% {
+        background-color: #f86f70;
+        box-shadow: 0 0 3px #f36e6e;
+    }
+    50% {
+        background-color: #f3393a;
+        box-shadow: 0 0 10px #ec4243;
+    }
+    100% {
+        background-color: #a80000;
+        box-shadow: 0 0 3px #940000;
+    }
+}
+
+.message-good-period {
+      animation: good_period 1300ms infinite;
+}
+.message-bad-period {
+    animation: bad_period 1300ms infinite;
+}

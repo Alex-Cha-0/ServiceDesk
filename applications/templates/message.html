@@ -14,15 +14,46 @@
     <div class="body-message">
         <div class="message-info">
             <div class="message-info-content">
+
+
                 <div class="action-button">
-                    <button type="button" class="btn btn-outline-info btn-sm">Принять</button>
-                    <button type="button" class="btn btn-outline-info btn-sm">Закрыть</button>
+                    {% if data.open_order %}
+                        <button type="button"
+                                onclick="location.href='{% url 'message_open_order' message_id=data.id %}'"
+                                class="btn btn-outline-secondary btn-sm" disabled>Принять
+                        </button>
+                    {% elif data.close_order %}
+                        <button type="button"
+                                onclick="location.href='{% url 'message_open_order' message_id=data.id %}'"
+                                class="btn btn-outline-info btn-sm">Вернуть в работу
+                        </button>
+                    {% else %}
+                        <button type="button"
+                                onclick="location.href='{% url 'message_open_order' message_id=data.id %}'"
+                                class="btn btn-outline-info btn-sm">Принять
+                        </button>
+                    {% endif %}
+                    {#                        <button type="button" onclick="location.href='{% url 'new' message_id=data.id %}'" class="btn btn-outline-info btn-sm" name="close">Закрыть</button>#}
                 </div>
+
+
                 <h6>Отправитель - {{ data.sender_name }}</h6>
                 <p class="mb-1"><small><b>Создана</b> - {{ data.datetime_send }}</small></p>
                 <p class="mb-1"><small><b>Принята</b> - {{ data.date_accepted }}</small></p>
-                <p class="mb-1"><small><b>Срок</b> - {{ data.control_period }}</small></p>
-                <p class="mb-1"><small><b>Закрыта</b> - {{ data.date_complited }}</small></p>
+
+                {% if data.is_past_due and data.open_order %}
+                    <p class="mb-1 message-bad-period"><small><b>Срок</b> - {{ data.control_period }}</small></p>
+                {% elif data.is_past_due and data.close_order %}
+                    <p class="mb-1"><small><b>Срок</b> - {{ data.control_period }}</small></p>
+                {% else %}
+                    <p class="mb-1 message-good-period"><small><b>Срок</b> - {{ data.control_period }}</small></p>
+                {% endif %}
+
+                {% if data.close_order %}
+                    <p class="mb-1 message-close-green"><small><b>Закрыта</b> - {{ data.date_complited }}</small></p>
+                {% else %}
+                    <p class="mb-1 message-close-red"><small><b>Закрыта</b> - {{ data.date_complited }}</small></p>
+                {% endif %}
                 <p class="mb-1"><small><b>Тема</b> - {{ data.subject }}</small></p>
                 <p class="mb-1"><small><b>Email</b> - {{ data.sender_email }}</small></p>
             </div>

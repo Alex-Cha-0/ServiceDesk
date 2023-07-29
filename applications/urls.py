@@ -19,7 +19,8 @@ urlpatterns = [
     path('close_order/<int:message_id>', CloseOrder.as_view(), name='close_order'),
     path('delete/<int:message_id>', delete_order, name='delete'),
     path('order/add_order', CreateOrder.as_view(), name='add_order'),
-    path('accepted_by_user/', AcceptedByUser.as_view(), name='accepted_by_user')
+    path('accepted_by_user/', AcceptedByUser.as_view(), name='accepted_by_user'),
     # path('delete_chat_message/<int:chat_id>/<int:chat_message_id>', delete_chat_message, name='delete_chat_message'),
+    path('message_open_order/<int:message_id>', open_order, name='message_open_order'),
 
 ]

@@ -329,18 +329,19 @@ class OpenOrder(LoginRequiredMixin, ListView):
         return Email.objects.filter(close_order=False)
 
 
-# def open_order(requests, message_id):
-#     mod = Email.objects.get(id=message_id)
-#     spec = AuthUser.objects.get(id=requests.user.id)
-#     mod.open_order = 1  # change field
-#     mod.specialist = spec
-#     mod.control_period = mod.datetime_send + timedelta(days=10)
-#     mod.save()
-#     model = Email.objects.all().order_by('-id')
-#     context = {
-#         'content': model
-#     }
-#     return render(requests, 'index.html', context)
+def open_order(requests, message_id):
+    mod = Email.objects.get(id=message_id)
+    spec = AuthUser.objects.get(id=requests.user.id)
+    mod.open_order = 1  # change field
+    mod.specialist = spec
+    mod.control_period = mod.datetime_send + timedelta(days=10)
+    mod.date_accepted = datetime.now()
+    mod.save()
+    # model = Email.objects.all().order_by('-id')
+    # context = {
+    #     'content': model
+    # }
+    return redirect(f'/message/{message_id}')
 
 
 # def close_order(requests, message_id):
@@ -366,3 +367,7 @@ def delete_order(requests, message_id):
         'content': model
     }
     return render(requests, 'index.html', context)
+
+
+# def message_accept(request, message_id):
+#     data = Email.objects.get(id=message_id)
