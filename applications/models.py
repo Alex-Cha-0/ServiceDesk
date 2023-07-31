@@ -7,6 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 import hashlib
 import os
+from datetime import datetime
 
 from django.contrib.auth.hashers import make_password
 from django.db import models

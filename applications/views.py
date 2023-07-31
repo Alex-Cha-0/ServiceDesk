@@ -371,3 +371,6 @@ def delete_order(requests, message_id):
 
 # def message_accept(request, message_id):
 #     data = Email.objects.get(id=message_id)
+
+
+

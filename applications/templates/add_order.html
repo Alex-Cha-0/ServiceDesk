@@ -5,20 +5,20 @@
 
 {% block content %} <h3 align="center">Добавить</h3>
     <div class="container">
-    <div class="row justify-content-center">
-    <div class="col text-center">
-    <form action="{% url 'add_order' %}" method="post">
-        {% csrf_token %}
+        <div class="row justify-content-center">
+            <div class="col text-center">
+                <form action="{% url 'add_order' %}" method="post">
+                    {% csrf_token %}
 
 
-        {{ form.as_p }}
+                    {{ form.as_p }}
 
 
-        <button type="submit" class="btn-outline-primary btn-block">Добавить заявку</button>
+                    <button type="submit" class="btn-outline-primary btn-block">Добавить заявку</button>
 
-    </form>
-    </div>
-    </div>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}
 

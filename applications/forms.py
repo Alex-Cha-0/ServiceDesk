@@ -67,7 +67,7 @@ class AddOrder(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['datetime_send'].initial = datetime.today()
+        self.fields['datetime_send'].initial = datetime.now()
 
     def clean_data(self):
         subject = self.cleaned_data['subject']

@@ -57,6 +57,9 @@
         <div class="row justify-content-md-center">
             <div class="col col-lg-6">
                 <div class="btn-block" role="group">
+                    <button class="btn btn-outline-primary" type="button" onclick="location.href='{% url 'todo_home' %}'">
+                        Список дел
+                    </button>
                     <button class="btn btn-outline-secondary" type="button" onclick="location.href='{% url 'new' %}'">
                         Новые
                     </button>
@@ -82,7 +85,7 @@
                         </button>
                     {% endif %}
 
-                    {% block dropdown %} {% include 'inc/_dropdown_links.html' %} {% endblock %}
+{#                    {% block dropdown %} {% include 'inc/_dropdown_links.html' %} {% endblock %}#}
                 </div>
             </div>
         </div>
