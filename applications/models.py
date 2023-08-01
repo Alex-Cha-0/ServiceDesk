@@ -264,7 +264,7 @@ class Email(models.Model):
     class Meta:
         managed = True
         db_table = 'email'
-        ordering = ['-id']
+        ordering = ['-datetime_send']
         verbose_name = 'Заявка'
         verbose_name_plural = 'Заявки'
 

@@ -15,7 +15,7 @@ class ToDo(models.Model):
     class Meta:
         managed = True
         db_table = 'todo'
-        ordering = ['todo_datetime_add']
+        ordering = ['-todo_datetime_add']
 
     def __str__(self):
         return str(self.todo_id)
