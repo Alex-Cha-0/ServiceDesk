@@ -2,11 +2,9 @@
 {% get_count_new_order as count_new %}
 {% get_count_in_work as count_in_work %}
 
-<nav class="navbar navbar-dark bg-secondary">
+<nav class="navbar navbar-dark bg-secondary fixed-top">
     <a class="navbar-brand" href="{% url 'home' %}">Servise Desk</a>
-    <form class="form-inline">
 
-    </form>
 
     <form class="form-inline my-2 my-lg-0">
         <span class="btn-block">
@@ -17,7 +15,8 @@
             <button class="btn btn-outline-light my-2 my-sm-0" type="button" onclick="location.href='{% url 'new' %}'">
             Новых <span class="badge badge-danger">{{ count_new }}</span>
             </button>
-            <button class="btn btn-outline-light my-2 my-sm-0" type="button" onclick="location.href='{% url 'accepted_by_user' %}'">
+            <button class="btn btn-outline-light my-2 my-sm-0" type="button"
+                    onclick="location.href='{% url 'accepted_by_user' %}'">
             В работе <span class="badge badge-danger">{{ count_in_work }}</span>
             </button>
 

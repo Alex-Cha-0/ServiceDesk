@@ -329,7 +329,7 @@ class OpenOrder(LoginRequiredMixin, ListView):
         return Email.objects.filter(close_order=False)
 
 
-def open_order(requests, message_id):
+def message_open_order(requests, message_id):
     mod = Email.objects.get(id=message_id)
     spec = AuthUser.objects.get(id=requests.user.id)
     mod.open_order = 1  # change field
@@ -355,22 +355,32 @@ def open_order(requests, message_id):
 #     }
 #     return render(requests, 'index.html', context)
 
+class DeleteOrder(LoginRequiredMixin, ListView):
+    model = Email
+    template_name = 'index.html'
+    context_object_name = 'content'
+    paginate_by = 15
+    raise_exception = True
 
-def delete_order(requests, message_id):
-    mod = Email.objects.get(id=message_id)
-    mod.delete()
-    # mod.open_order = 0  # change field
-    # mod.close_order = 1
-    # mod.save()
-    model = Email.objects.all().order_by('-id')
-    context = {
-        'content': model
-    }
-    return render(requests, 'index.html', context)
+    def get_queryset(self):
+        message_id = self.kwargs.get('message_id', None)
+        mod = Email.objects.get(id=message_id)
+        mod.delete()
+        return Email.objects.filter(close_order=True)
 
+
+
+# def delete_order(requests, message_id):
+#     mod = Email.objects.get(id=message_id)
+#     mod.delete()
+#     # mod.open_order = 0  # change field
+#     # mod.close_order = 1
+#     # mod.save()
+#     model = Email.objects.all().order_by('-id')
+#     context = {
+#         'content': model
+#     }
+#     return render(requests, 'index.html', context)
 
 # def message_accept(request, message_id):
 #     data = Email.objects.get(id=message_id)
-
-
-

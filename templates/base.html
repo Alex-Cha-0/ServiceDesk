@@ -3,38 +3,36 @@
 
 <html>
 <link>
-<div>
-    <head>
-        <meta charset="utf-8">
-        <title>
-            {% block title %} Service Desk {% endblock %}
-        </title>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-4.4.1.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/screen.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/anymated-btn.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}"/>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+<head>
+    <meta charset="utf-8">
+    <title>
+        {% block title %} Service Desk {% endblock %}
+    </title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-4.4.1.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/screen.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/anymated-btn.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/all.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap.rtl.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-grid.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-grid.rtl.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-reboot.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-reboot.rtl.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-utilities.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-utilities.rtl.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/message.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}"/>
 
-        <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap.rtl.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-grid.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-grid.rtl.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-reboot.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-reboot.rtl.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-utilities.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-utilities.rtl.css' %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/message.css' %}"/>
-
-    </head>
-</div>
+</head>
 
 <body>
-
-
-{% block nav %} {% include 'inc/_nav.html' %} {% endblock %}
+<header>
+    {% block menu %} {% include  'inc/_menu.html' %} {% endblock %}
+    {% block nav %} {% include 'inc/_nav.html' %} {% endblock %}
+</header>
 <div class="container-fluid">
-
-
     {% block messages %}
         {% if messages %}
             {% for message in messages %}
@@ -51,46 +49,46 @@
             {% endfor %}
         {% endif %}
     {% endblock %}
-
-    {% block buttons %}
-        <br>
-        <div class="row justify-content-md-center">
-            <div class="col col-lg-6">
-                <div class="btn-block" role="group">
-                    <button class="btn btn-outline-primary" type="button" onclick="location.href='{% url 'todo_home' %}'">
-                        Список дел
-                    </button>
-                    <button class="btn btn-outline-secondary" type="button" onclick="location.href='{% url 'new' %}'">
-                        Новые
-                    </button>
-                    <button class="btn btn-outline-secondary" type="button" onclick="location.href='{% url 'home' %}'">
-                        Показать
-                        все
-                    </button>
-
-                    <button class="btn btn-outline-secondary" type="button"
-                            onclick="location.href='{% url 'accepted' %}'">
-                        Принятые
-                    </button>
-
-                    <button class="btn btn-outline-secondary" type="button" onclick="location.href='{% url 'close' %}'">
-                        Закрытые
-                    </button>
-
-                    {% if request.user.is_authenticated %}
-                        <button type="button" class="btn btn-outline-secondary"
-                                onclick="location.href='{% url 'add_order' %}'">
-                            Создать
-                            заявку
-                        </button>
-                    {% endif %}
-
-{#                    {% block dropdown %} {% include 'inc/_dropdown_links.html' %} {% endblock %}#}
-                </div>
-            </div>
-        </div>
-        <br>
-    {% endblock %}
+    {#    {% block buttons %}#}
+    {#        <br>#}
+    {#        <div class="row justify-content-md-center my-position">#}
+    {#            <div class="col col-lg-5">#}
+    {#                <div class="btn-block" role="group">#}
+    {#                    <button class="btn btn-outline-primary" type="button"#}
+    {#                            onclick="location.href='{% url 'todo_home' %}'">#}
+    {#                        Список дел#}
+    {#                    </button>#}
+    {#                    <button class="btn btn-outline-secondary" type="button" onclick="location.href='{% url 'new' %}'">#}
+    {#                        Новые#}
+    {#                    </button>#}
+    {#                    <button class="btn btn-outline-secondary" type="button" onclick="location.href='{% url 'home' %}'">#}
+    {#                        Показать#}
+    {#                        все#}
+    {#                    </button>#}
+    {##}
+    {#                    <button class="btn btn-outline-secondary" type="button"#}
+    {#                            onclick="location.href='{% url 'accepted' %}'">#}
+    {#                        Принятые#}
+    {#                    </button>#}
+    {##}
+    {#                    <button class="btn btn-outline-secondary" type="button" onclick="location.href='{% url 'close' %}'">#}
+    {#                        Закрытые#}
+    {#                    </button>#}
+    {##}
+    {#                    {% if request.user.is_authenticated %}#}
+    {#                        <button type="button" class="btn btn-outline-secondary"#}
+    {#                                onclick="location.href='{% url 'add_order' %}'">#}
+    {#                            Создать#}
+    {#                            заявку#}
+    {#                        </button>#}
+    {#                    {% endif %}#}
+    {##}
+    {#                    {% block dropdown %} {% include 'inc/_dropdown_links.html' %} {% endblock %}#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#        <br>#}
+    {#    {% endblock %}#}
 
     {% block content %} {% endblock %}
 
@@ -98,7 +96,7 @@
 
     {% block table %}
         {{ task_id }} {{ task_status }}
-        <div class="container">
+        <div class="container my-position">
             <div class="row">
 
                 <table class="table table-sm" id="table2">
@@ -130,18 +128,6 @@
                         {% endif %}
 
                         <td>
-                            {#                                <button title="Принять" type="submit" class="btn btn-primary"#}
-                            {#                                        onclick="location.href='{% url "open_order" message_id=data.id %}'"><i#}
-                            {#                                        class="bi bi-file-earmark-plus"></i>#}
-                            {#                                </button>#}
-                            {#                                <button title="Закрыть" type="submit" class="btn btn-success"#}
-                            {#                                        onclick="location.href='{% url "close_order" message_id=data.id %}'"><i#}
-                            {#                                        class="bi bi-check-square"></i>#}
-                            {#                                </button>#}
-                            {#                                <button title="Удалить запись" type="submit" class="btn btn-danger"#}
-                            {#                                        onclick="location.href='{% url "delete" message_id=data.id %}'"><i#}
-                            {#                                        class="bi bi-x-square"></i>#}
-                            {#                                </button>#}
                             {% if data.open_order %}
                                 <a class="link-dark" title="Принять"
                                    href=""
@@ -228,6 +214,7 @@
 <script src="{% static 'js_b5/bootstrap.esm.js' %}"></script>
 <script src="{% static 'js_b5/bootstrap.js' %}"></script>
 <script src="{% static 'js_my/my.js' %}"></script>
+<script src="{% static 'js_my/sidebar.js' %}"></script>
 </body>
 </html>
 

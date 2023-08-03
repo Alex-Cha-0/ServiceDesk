@@ -11,10 +11,10 @@
 {#    <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-reboot.rtl.css' %}"/>#}
 {#    <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-utilities.css' %}"/>#}
 {#    <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-utilities.rtl.css' %}"/>#}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/fontawesome.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-datepicker.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/todo.css' %}"/>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+{#    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">#}
+    <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/all.min.css' %}"/>
     <title>Список дел</title>
 </head>
 <body>
@@ -92,16 +92,16 @@
                         <h2 class="m-0 p-0">
                             {% if data.todo_in_work %}
                                 <a href="{% url "mark_as_complete" id=data.todo_id %}"><i
-                                        class="fa fa-check-square-o  text-primary btn m-0 p-0" data-toggle="tooltip"
+                                        class="fa fa-check-square fa-xs text-primary btn m-0 p-0" data-toggle="tooltip"
                                         data-placement="bottom" title="Завершить"></i></a>
                             {% elif data.todo_completed %}
                                 <a href=""><i
-                                        class="fa fa-check-square-o  text-primary btn m-0 p-0 text-muted"
+                                        class="fa fa-check-square fa-xs text-primary btn m-0 p-0 text-muted"
                                         data-toggle="tooltip"
                                         data-placement="bottom" title="Завершена"></i></a>
                             {% else %}
                                 <a href="{% url "mark_as_todo" id=data.todo_id %}"><i
-                                        class="fa fa-square-o text-primary btn m-0 p-0" data-toggle="tooltip"
+                                        class="fa-regular fa-square-full fa-xs text-primary btn m-0 p-0" data-toggle="tooltip"
                                         data-placement="bottom" title="Поставить в работу"></i></a>
                             {% endif %}
                         </h2>
@@ -140,7 +140,7 @@
                             </h5>
                             <h5 class="m-0 p-0 px-2">
                                 <a href="{% url 'delete_todo' id=data.todo_id %}"><i
-                                        class="fa fa-trash-o text-danger btn m-0 p-0" data-toggle="tooltip"
+                                        class="fa fa-trash text-danger btn m-0 p-0" data-toggle="tooltip"
                                         data-placement="bottom" title="Delete todo"></i></a>
                             </h5>
                         </div>
