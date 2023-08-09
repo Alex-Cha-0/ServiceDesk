@@ -7,7 +7,7 @@ from django.utils import timezone
 class ToDo(models.Model):
     todo_id = models.AutoField(primary_key=True)
     todo_content = models.TextField(blank=True, null=True)
-    todo_datetime_add = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    todo_datetime_add = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     todo_due_time = models.DateTimeField(blank=True, null=True)
     todo_in_work = models.BooleanField(default=False, blank=True, null=True)
     todo_completed = models.BooleanField(default=False, blank=True, null=True)

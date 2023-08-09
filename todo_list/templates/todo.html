@@ -46,10 +46,10 @@
                         <label class="text-secondary my-2 p-0 px-1 view-opt-label due-date-label d-none">Due date not
                             set</label>
                         <div class="form-group" title="Назначить срок выполнения">
-                            <input type="date" class="form-control" name="date" required>
+                            <input type="datetime-local" class="form-control" name="date" required>
                         </div>
                         <div class="col-auto px-0 mx-0 mr-2">
-                            <button type="submit" class="btn btn-primary">Add</button>
+                            <button type="submit" id="submition" class="btn btn-primary">Add</button>
                         </div>
                     </div>
                 </div>
@@ -108,13 +108,19 @@
                     </div>
                     <div class="col px-1 m-1 align-items-center">
                         {% if data.todo_completed %}
-                            <input type="text"
-                                   class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded px-3 text-success text-muted"
-                                   readonly value="{{ data.todo_content }}" title="{{ data.todo_content }}"/>
+{#                            <input type="text"#}
+{#                                   class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded px-3 text-success text-muted"#}
+{#                                   readonly value="{{ data.todo_content }}" title="{{ data.todo_content }}"/>#}
+                            <div class="border-0 edit-todo-input bg-transparent rounded px-3">
+                                <p>{{ data.todo_content }}</p>
+                            </div>
                         {% elif data.todo_in_work %}
-                            <input type="text"
-                                   class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded px-3"
-                                   readonly value="{{ data.todo_content }}" title="{{ data.todo_content }}"/>
+{#                            <input type="text"#}
+{#                                   class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded px-3"#}
+{#                                   readonly value="{{ data.todo_content }}" title="{{ data.todo_content }}"/>#}
+                            <div class="border-0 edit-todo-input bg-transparent rounded px-3">
+                                <p>{{ data.todo_content }}</p>
+                            </div>
                         {% else %}
                             <!-- Форма редактирования -->
                             <form action="update_todo/{{ data.todo_id }}" method="post">

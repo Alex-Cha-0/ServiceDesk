@@ -99,10 +99,9 @@
         <div class="container my-position">
             <div class="row">
 
-                <table class="table table-sm" id="table2">
+                <table class="table table-sm table-sort" id="myTable2">
                     <caption>Список заявок</caption>
-
-                    <tbody>
+                    <thead>
                     <tr>
                         <th scope="col" onclick="sortTable(0)">Действия</th>
                         <th scope="col" onclick="sortTable(1)"></th>
@@ -113,7 +112,8 @@
                         <th scope="col" onclick="sortTable(6)">Cоздана</th>
                         <th scope="col" onclick="sortTable(7)">Срок</th>
                     </tr>
-
+                    </thead>
+                    <tbody>
                     {% for data in content %}
                         {% if data.open_order %}
                             {% if data.is_past_due %}
@@ -144,6 +144,9 @@
                             <a class="link-danger" title="Удалить запись"
                                href="{% url "delete" message_id=data.id %}" onclick="return configMsgDeleteOrder();"><i
                                     class="bi bi-x-square"></i></a>
+                            <a class="link-primary" title="Добавить в список дел"><i class="far fa-chart-bar"></i></a>
+                            <a title="Выбрать категории" id="show-checkboxes"><i class="fa-solid fa-box"
+                                                                                 style="color: #328b61;"></i></a>
                         </td>
 
                         {% if data.yes_no_attach %}
