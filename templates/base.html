@@ -24,15 +24,19 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css_b5/bootstrap-utilities.rtl.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/message.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/servise-desk.css' %}"/>
 
 </head>
 
 <body>
+
 <header>
-    {% block menu %} {% include  'inc/_menu.html' %} {% endblock %}
     {% block nav %} {% include 'inc/_nav.html' %} {% endblock %}
 </header>
-<div class="container-fluid">
+
+{#<div class="container">#}
+<div class="servise-desk">
+
     {% block messages %}
         {% if messages %}
             {% for message in messages %}
@@ -49,129 +53,101 @@
             {% endfor %}
         {% endif %}
     {% endblock %}
-    {#    {% block buttons %}#}
-    {#        <br>#}
-    {#        <div class="row justify-content-md-center my-position">#}
-    {#            <div class="col col-lg-5">#}
-    {#                <div class="btn-block" role="group">#}
-    {#                    <button class="btn btn-outline-primary" type="button"#}
-    {#                            onclick="location.href='{% url 'todo_home' %}'">#}
-    {#                        Список дел#}
-    {#                    </button>#}
-    {#                    <button class="btn btn-outline-secondary" type="button" onclick="location.href='{% url 'new' %}'">#}
-    {#                        Новые#}
-    {#                    </button>#}
-    {#                    <button class="btn btn-outline-secondary" type="button" onclick="location.href='{% url 'home' %}'">#}
-    {#                        Показать#}
-    {#                        все#}
-    {#                    </button>#}
-    {##}
-    {#                    <button class="btn btn-outline-secondary" type="button"#}
-    {#                            onclick="location.href='{% url 'accepted' %}'">#}
-    {#                        Принятые#}
-    {#                    </button>#}
-    {##}
-    {#                    <button class="btn btn-outline-secondary" type="button" onclick="location.href='{% url 'close' %}'">#}
-    {#                        Закрытые#}
-    {#                    </button>#}
-    {##}
-    {#                    {% if request.user.is_authenticated %}#}
-    {#                        <button type="button" class="btn btn-outline-secondary"#}
-    {#                                onclick="location.href='{% url 'add_order' %}'">#}
-    {#                            Создать#}
-    {#                            заявку#}
-    {#                        </button>#}
-    {#                    {% endif %}#}
-    {##}
-    {#                    {% block dropdown %} {% include 'inc/_dropdown_links.html' %} {% endblock %}#}
-    {#                </div>#}
-    {#            </div>#}
-    {#        </div>#}
-    {#        <br>#}
-    {#    {% endblock %}#}
+    <!-- Sidebar -->
+    <div class="">
+        {% block menu %} {% include  'inc/_menu.html' %} {% endblock %}
+    </div>
 
     {% block content %} {% endblock %}
 
     {% block text %} {% endblock %}
 
+    <!-- Table -->
+
     {% block table %}
         {{ task_id }} {{ task_status }}
-        <div class="container my-position">
-            <div class="row">
+        {#            <div class="my-position table-responsive">#}
+        {#            <div class="row">#}
+        <div class="my-position table-responsive">
+            <div class="">
+                <div>
 
-                <table class="table table-sm table-sort" id="myTable2">
-                    <caption>Список заявок</caption>
-                    <thead>
-                    <tr>
-                        <th scope="col" onclick="sortTable(0)">Действия</th>
-                        <th scope="col" onclick="sortTable(1)"></th>
-                        <th scope="col" onclick="sortTable(2)">id</th>
-                        <th scope="col" onclick="sortTable(3)">Тема</th>
-                        <th scope="col" onclick="sortTable(4)">Автор</th>
-                        <th scope="col" onclick="sortTable(5)">Cпециалист</th>
-                        <th scope="col" onclick="sortTable(6)">Cоздана</th>
-                        <th scope="col" onclick="sortTable(7)">Срок</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for data in content %}
-                        {% if data.open_order %}
-                            {% if data.is_past_due %}
-                                <tr class="table-danger">
-                                    {% else %}
-                                <tr class="table-success">
-                            {% endif %}
-                        {% elif data.close_order %}
-                            <tr class="table-secondary">
-                                {% else %}
-                            <tr class="table-primary">
-                        {% endif %}
+                    <table class="table table-borderless table-sort table-hover" id="myTable2">
 
-                        <td>
+                        <thead>
+                        <tr>
+                            <th scope="col" onclick="sortTable(0)">Действия</th>
+                            <th scope="col" onclick="sortTable(1)"></th>
+                            <th scope="col" onclick="sortTable(2)">id</th>
+                            <th scope="col" onclick="sortTable(3)">Тема</th>
+                            <th scope="col" onclick="sortTable(4)">Автор</th>
+                            <th scope="col" onclick="sortTable(5)">Cпециалист</th>
+                            <th scope="col" onclick="sortTable(6)">Cоздана</th>
+                            <th scope="col" onclick="sortTable(7)">Срок</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for data in content %}
                             {% if data.open_order %}
-                                <a class="link-dark" title="Принять"
-                                   href=""
-                                   onclick="return ifOpenOrder();"><i class="bi bi-plus-square"></i></a>
-                            {% else %}
-                                <a class="link-primary" title="Принять"
-                                   href="{% url "open_order" message_id=data.id %}"
-                                   onclick="return confirmMsgApplyOrder();"><i class="bi bi-plus-square"></i></a>
+                                {% if data.is_past_due %}
+                                    <tr class="table-danger">
+                                        {% else %}
+                                    <tr class="table-success">
+                                {% endif %}
+                            {% elif data.close_order %}
+                                <tr class="table-secondary">
+                                    {% else %}
+                                <tr class="table-primary">
                             {% endif %}
 
-                            <a class="link-success" title="Закрыть"
-                               href="{% url "close_order" message_id=data.id %}"
-                               onclick="return configMsgCloseOrder();"><i class="bi bi-check-square"></i></a>
-                            <a class="link-danger" title="Удалить запись"
-                               href="{% url "delete" message_id=data.id %}" onclick="return configMsgDeleteOrder();"><i
-                                    class="bi bi-x-square"></i></a>
-                            <a class="link-primary" title="Добавить в список дел"><i class="far fa-chart-bar"></i></a>
-                            <a title="Выбрать категории" id="show-checkboxes"><i class="fa-solid fa-box"
-                                                                                 style="color: #328b61;"></i></a>
-                        </td>
+                            <td>
+                                {% if data.open_order %}
+                                    <a class="link-dark" title="Принять"
+                                       href=""
+                                       onclick="return ifOpenOrder();"><i class="bi bi-plus-square"></i></a>
+                                {% else %}
+                                    <a class="link-primary" title="Принять"
+                                       href="{% url "open_order" message_id=data.id %}"
+                                       onclick="return confirmMsgApplyOrder();"><i class="bi bi-plus-square"></i></a>
+                                {% endif %}
 
-                        {% if data.yes_no_attach %}
-                            <td><i class="bi bi-paperclip"></i></td>
-                        {% else %}
-                            <td></td>
-                        {% endif %}
-                        <td><a href="{{ data.get_absolute_url }}">{{ data.id }}</a></td>
-                        <td>{{ data.subject }}</td>
-                        <td>{{ data.sender_name }}</td>
-                        <td>{{ data.specialist }}</td>
-                        <td>{{ data.datetime_send }}</td>
-                        <td>{{ data.control_period }}</td>
+                                <a class="link-success" title="Закрыть"
+                                   href="{% url "close_order" message_id=data.id %}"
+                                   onclick="return configMsgCloseOrder();"><i class="bi bi-check-square"></i></a>
+                                <a class="link-danger" title="Удалить запись"
+                                   href="{% url "delete" message_id=data.id %}"
+                                   onclick="return configMsgDeleteOrder();"><i
+                                        class="bi bi-x-square"></i></a>
+                                <a class="link-primary" title="Добавить в список дел"><i
+                                        class="far fa-chart-bar"></i></a>
+                                <a title="Выбрать категории" id="show-checkboxes"><i class="fa-solid fa-box"
+                                                                                     style="color: #328b61;"></i></a>
+                            </td>
 
-                    {% endfor %}
-                    </tbody>
-                </table>
+                            {% if data.yes_no_attach %}
+                                <td><i class="bi bi-paperclip"></i></td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+                            <td><a href="{{ data.get_absolute_url }}">{{ data.id }}</a></td>
+                            <td>{{ data.subject }}</td>
+                            <td>{{ data.sender_name }}</td>
+                            <td>{{ data.specialist }}</td>
+                            <td>{{ data.datetime_send }}</td>
+                            <td>{{ data.control_period }}</td>
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+
             </div>
-
-
         </div>
-        </div>
-
     {% endblock %}
 
+
+</div>
 {% block pagination %}
     {% if page_obj.has_other_pages %}
         <nav aria-label="Page navigation example">
@@ -205,9 +181,6 @@
         </nav>
     {% endif %}
 {% endblock %}
-
-</div>
-
 <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
 <script src="{% static 'js/popper.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-4.4.1.js' %}"></script>

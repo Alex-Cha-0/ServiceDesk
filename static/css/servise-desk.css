@@ -1,0 +1,15 @@
+
+.servise-desk {
+    margin-top: 50px;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+servise-desk-navbar {
+    position: relative;
+}
+

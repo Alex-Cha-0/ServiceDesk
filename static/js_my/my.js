@@ -20,3 +20,17 @@ $(document).ready(function () {
         $("#checkboxes-dropdown").toggle(); // Показать/скрыть выпадающее окно
     });
 });
+
+
+(function activeLink() {
+  [...this.querySelectorAll("a")]
+    .filter(a => this.URL.startsWith(a.href))
+    .forEach(a => a.classList.add("active"));
+}.bind(window.document)());
+
+
+$(".sidebar i").each(function () {
+    if ((window.location.pathname.indexOf($(this).attr("href"))) > -1) {
+        $(this).addClass("fa-beat");
+    }
+});
