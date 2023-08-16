@@ -85,7 +85,7 @@ DATABASES = {
         "NAME": "alex",
         "USER": "alex",
         "PASSWORD": SQL_PASSWORD,
-        "HOST": "1c\mssql2016",
+        "HOST": "1c\\mssql2016",
         "PORT": "",
         "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server",
                     },

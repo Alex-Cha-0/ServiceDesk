@@ -9,9 +9,8 @@ from django.http import request
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView
 
-from .admin import EmailSettingsForm
 from .models import *
-from .forms import AddOrder, UserRegisterForm, UserLoginForm, ContactForm
+from .forms import AddOrder, UserRegisterForm, UserLoginForm, ContactForm, CategoryChoiceForm
 from .utils import MyMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -20,8 +19,27 @@ from django.core.mail import EmailMessage
 from bs4 import BeautifulSoup
 
 
+def close_order(request, message_id):
+    data_email = Email.objects.get(id=message_id)
+    if request.method == 'POST':
+        form = CategoryChoiceForm(request.POST, initial={'ordernumber': message_id})
+        if form.is_valid():
+            data_email.open_order = 0  # change field
+            data_email.close_order = 1
+            data_email.date_complited = datetime.now()
+            data_email.save()
+
+            form.save()
+            return redirect(f'/applications/message/{message_id}')
+    else:
+
+        form = CategoryChoiceForm(initial={'ordernumber': message_id})
+
+    return render(request, 'add_category.html', {"form": form})
+
+
 def send_email(request, message_id):
-    data = Email.objects.get(id=message_id)
+    email_data = Email.objects.get(id=message_id)
     chat_data = Chat.objects.filter(chat_id=message_id)
 
     def edit_body(html_body, content):
@@ -31,7 +49,7 @@ def send_email(request, message_id):
         new_p2 = soup.new_tag('p')
         new_hr = soup.new_tag('hr')
         new_p.string = content
-        new_p2.string = 'date: ' + str(data.datetime_send)
+        new_p2.string = 'date: ' + str(email_data.datetime_send)
         div_tag = soup.find('div')
         solid_hr = soup.new_tag('hr')
         solid_hr['style'] = " height: 12px;" \
@@ -49,7 +67,7 @@ def send_email(request, message_id):
             chat_content = soup.new_tag("p")
             chat_datetime = soup.new_tag("small")
 
-            if i.sender == 1:
+            if i.sender_id == 1:
                 # Blue color
 
                 chat_username.string = i.user_name
@@ -84,7 +102,8 @@ def send_email(request, message_id):
         return my_html_string
 
     if request.method == 'POST':
-        form = ContactForm(request.POST, initial={'subject': f're: {data.subject}', 'to': data.sender_email})
+        form = ContactForm(request.POST,
+                           initial={'subject': f're: {email_data.subject}', 'to': email_data.sender_email})
 
         if form.is_valid():
             subject = form.cleaned_data['subject']
@@ -92,23 +111,31 @@ def send_email(request, message_id):
             to = [form.cleaned_data['to']]
             cc = [form.cleaned_data['cc_myself']]
 
-            mail = EmailMessage(subject=subject, body=edit_body(data.text_body, content),
+            mail = EmailMessage(subject=subject, body=edit_body(email_data.text_body, content),
                                 from_email=settings.EMAIL_HOST_USER, to=to, cc=cc)
             mail.content_subtype = 'html'
             mail.send(fail_silently=False)
 
-            chat_model = Chat(chat_id=data.id, user_name=f"{request.user.last_name} {request.user.first_name}",
-                              content=content, sender=1)
-            chat_model.save()
+            chat_create = Chat.objects.create(user_name=f"{request.user.last_name} {request.user.first_name}",
+                                              content=content, sender_id=1)
+            email_data.chat_set.add(chat_create)
+
+            if email_data.is_chat:
+                pass
+            else:
+                email_data.is_chat = True
+
+            email_data.save()
 
             if mail.send:
                 messages.success(request, 'Письмо отправлено')
-                return redirect(f'/message/{message_id}')
+                return redirect(f'/applications/message/{message_id}')
             else:
                 messages.error(request, 'Ошибка отправки')
     else:
         # form = ContactForm()
-        form = ContactForm(initial={'subject': f're: ##{message_id}## {data.subject}', 'to': data.sender_email})
+        form = ContactForm(
+            initial={'subject': f're: ##{message_id}## {email_data.subject}', 'to': email_data.sender_email})
 
     return render(request, 'send_email.html', {"form": form})
 
@@ -265,12 +292,18 @@ class GetMessage(LoginRequiredMixin, DetailView):
     raise_exception = True
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(GetMessage, self).get_context_data(**kwargs)
-        message_id = self.kwargs.get('pk', None)
-        context['attachment'] = Attachments.objects.filter(id_email=message_id)
-        context['dir'] = settings.DIRECTORY_ATTACHMENTS
-        context['chat_data'] = Chat.objects.filter(chat_id=message_id)
-        return context
+        try:
+            context = super(GetMessage, self).get_context_data(**kwargs)
+            message_id = self.kwargs.get('pk', None)
+            context['attachment'] = Attachments.objects.filter(id_email=message_id)
+            context['dir'] = settings.DIRECTORY_ATTACHMENTS
+            context['chat_data'] = Chat.objects.filter(chat_id=message_id)
+            context['category'] = Category.objects.get(ordernumber=message_id)
+            return context
+        except Exception as s:
+            pass
+        finally:
+            return context
 
 
 class CreateOrder(LoginRequiredMixin, CreateView):
@@ -292,21 +325,26 @@ class CreateOrder(LoginRequiredMixin, CreateView):
 #         form = AddOrder()
 #     return render(requests, 'add_order.html', {'form': form})
 
-class CloseOrder(LoginRequiredMixin, ListView):
-    model = Email
-    template_name = 'index.html'
-    context_object_name = 'content'
-    paginate_by = 15
-    raise_exception = True
+# class CloseOrder(CreateView):
+#     form_class = CategoryForm
+#     template_name = 'add_category.html'
 
-    def get_queryset(self):
-        message_id = self.kwargs.get('message_id', None)
-        mod = Email.objects.get(id=message_id)
-        mod.open_order = 0  # change field
-        mod.close_order = 1
-        mod.date_complited = datetime.now()
-        mod.save()
-        return Email.objects.filter(close_order=False)
+
+# class CloseOrder(LoginRequiredMixin, ListView):
+#     model = Email
+#     template_name = 'index.html'
+#     context_object_name = 'content'
+#     paginate_by = 15
+#     raise_exception = True
+#
+#     def get_queryset(self):
+#         message_id = self.kwargs.get('message_id', None)
+#         mod = Email.objects.get(id=message_id)
+#         mod.open_order = 0  # change field
+#         mod.close_order = 1
+#         mod.date_complited = datetime.now()
+#         mod.save()
+#         return Email.objects.filter(close_order=False)
 
 
 class OpenOrder(LoginRequiredMixin, ListView):
@@ -333,6 +371,7 @@ def message_open_order(requests, message_id):
     mod = Email.objects.get(id=message_id)
     spec = AuthUser.objects.get(id=requests.user.id)
     mod.open_order = 1  # change field
+    mod.close_order = 0
     mod.specialist = spec
     mod.control_period = mod.datetime_send + timedelta(days=10)
     mod.date_accepted = datetime.now()
@@ -341,7 +380,7 @@ def message_open_order(requests, message_id):
     # context = {
     #     'content': model
     # }
-    return redirect(f'/message/{message_id}')
+    return redirect(f'/applications/message/{message_id}')
 
 
 # def close_order(requests, message_id):
@@ -367,8 +406,6 @@ class DeleteOrder(LoginRequiredMixin, ListView):
         mod = Email.objects.get(id=message_id)
         mod.delete()
         return Email.objects.filter(close_order=True)
-
-
 
 # def delete_order(requests, message_id):
 #     mod = Email.objects.get(id=message_id)

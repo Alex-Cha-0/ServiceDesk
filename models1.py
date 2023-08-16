@@ -6,42 +6,11 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-from django.urls import reverse
-from django.utils import timezone
-
-printer = 'Prnt'
-server = 'Srv'
-software = 'Soft'
-helpUser = 'Help'
-video = 'Vdo'
-one_c = '1c'
-lan = 'lan'
-
-TYPE_CHOICES = (
-    (printer, 'Оргтехника'),
-    (server, 'Сервера'),
-    (software, 'Программное обеспечение'),
-    (helpUser, 'Помощь пользователям'),
-    (video, 'Видеонаблюдение'),
-    (one_c, '1c'),
-    (lan, 'Монтаж лвс'),
-)
-
-
-class Thema(models.Model):
-    name = models.CharField(max_length=5, choices=TYPE_CHOICES, unique=True)
-
-    class Meta:
-        managed = True
-        verbose_name = 'Категории работ'
-
-    def __str__(self):
-        return self.get_name_display()
 
 
 class Attachments(models.Model):
     link = models.TextField(db_column='Link', blank=True, null=True)  # Field name made lowercase.
-    id_email = models.ForeignKey('Email', on_delete=models.CASCADE, db_column='id_email', blank=True, null=True)
+    id_email = models.ForeignKey('Email', models.DO_NOTHING, db_column='id_email', blank=True, null=True)
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     name = models.CharField(max_length=150, blank=True, null=True)
 
@@ -49,51 +18,27 @@ class Attachments(models.Model):
         managed = False
         db_table = 'Attachments'
 
-    def __str__(self):
-        return str(self.id_email)
-
-    def slice_string(self):
-        s = self.name
-        last_dot_index = s.rfind('.')  # Находим индекс последнего символа '.'
-
-        if last_dot_index != -1:  # Если символ '.' найден
-            sliced_string = s[last_dot_index:]  # Делаем срез строки до последнего символа '.'
-            return sliced_string
-        else:
-            return s  # Возвращаем исходную строку, если символ '.' не найден
-
 
 class Category(models.Model):
     orderid = models.AutoField(db_column='orderID', primary_key=True)  # Field name made lowercase.
-    ordernumber = models.ForeignKey('Email', on_delete=models.DO_NOTHING,
-                                    db_column='orderNumber',
-                                    related_name='category_order_number')  # Field name made lowercase.
-    createddate = models.DateTimeField(auto_now_add=True, blank=True, null=True)  # Field name made lowercase.
-    choice = models.ManyToManyField(Thema)
+    createddate = models.DateTimeField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
+    ordernumber = models.ForeignKey('Email', models.DO_NOTHING, db_column='orderNumber')  # Field name made lowercase.
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'Category'
-        verbose_name = 'Категории'
-
-    def __str__(self):
-        return str(self.orderid)
 
 
 class CategoryChoice(models.Model):
     id = models.BigAutoField(primary_key=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    thema = models.ForeignKey('Thema', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, models.DO_NOTHING)
+    thema = models.ForeignKey('ApplicationsThema', models.DO_NOTHING)
 
     class Meta:
         managed = False
         db_table = 'Category_choice'
         unique_together = (('category', 'thema'),)
-        verbose_name = 'Выбранные категории'
-
-    def __str__(self):
-        return str(self.category)
 
 
 class Division(models.Model):
@@ -103,9 +48,6 @@ class Division(models.Model):
     user_exchange = models.TextField(blank=True, null=True)
     password_exchange = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return str(self.uid)
-
     class Meta:
         managed = False
         db_table = 'Division'
@@ -113,23 +55,38 @@ class Division(models.Model):
 
 class Staff(models.Model):
     employee = models.TextField(blank=True, null=True)
-    uid_division = models.ForeignKey(Division, models.DO_NOTHING, db_column='uid_Division', blank=True,
-                                     null=True)  # Field name made lowercase.
+    uid_division = models.ForeignKey(Division, models.DO_NOTHING, db_column='uid_Division', blank=True, null=True)  # Field name made lowercase.
     email_staff = models.TextField(db_column='email_Staff', blank=True, null=True)  # Field name made lowercase.
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-
-    def __str__(self):
-        return self.employee
-
-    def get_absolute_url(self):
-        return reverse('specialist', kwargs={'specialist_id': self.id})
 
     class Meta:
         managed = False
         db_table = 'Staff'
-        verbose_name = 'Персонал'
-        verbose_name_plural = 'Персонал'
-        ordering = ['-id']
+
+
+class ApPrinters(models.Model):
+    id = models.AutoField()
+    model = models.CharField(max_length=50, blank=True, null=True)
+    cartridge_model = models.TextField(blank=True, null=True)
+    drum_cartridge = models.CharField(max_length=50, blank=True, null=True)
+    ip_address = models.CharField(max_length=50, blank=True, null=True)
+    mac = models.CharField(max_length=100, blank=True, null=True)
+    location = models.CharField(max_length=200, blank=True, null=True)
+    building = models.CharField(max_length=10, blank=True, null=True)
+    html_content = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'ap_printers'
+
+
+class ApplicationsThema(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    name = models.CharField(unique=True, max_length=5)
+
+    class Meta:
+        managed = False
+        db_table = 'applications_thema'
 
 
 class AuthGroup(models.Model):
@@ -178,9 +135,6 @@ class AuthUser(models.Model):
         managed = False
         db_table = 'auth_user'
 
-    def __str__(self):
-        return f"{self.last_name} {self.first_name}"
-
 
 class AuthUserGroups(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -191,9 +145,6 @@ class AuthUserGroups(models.Model):
         managed = False
         db_table = 'auth_user_groups'
         unique_together = (('user', 'group'),)
-
-    def __str__(self):
-        return f"{self.user} {self.group}"
 
 
 class AuthUserUserPermissions(models.Model):
@@ -208,20 +159,16 @@ class AuthUserUserPermissions(models.Model):
 
 
 class Chat(models.Model):
-    message_id = models.AutoField(primary_key=True)
-    chat_id = models.ForeignKey('Email', on_delete=models.CASCADE, blank=True, null=True, db_column='chat_id')
+    message_id = models.AutoField()
+    chat_id = models.IntegerField(blank=True, null=True)
     user_name = models.CharField(max_length=50, blank=True, null=True)
     content = models.TextField(blank=True, null=True)
-    datetime_send = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    sender_id = models.IntegerField(blank=True, null=True, db_column='sender_id')
+    datetime_send = models.DateTimeField(blank=True, null=True)
+    sender_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'chat'
-        ordering = ['datetime_send']
-
-    def __str__(self):
-        return str(self.chat_id)
 
 
 class DjangoAdminLog(models.Model):
@@ -278,38 +225,19 @@ class Email(models.Model):
     yes_no_attach = models.BooleanField(blank=True, null=True)
     text_body = models.TextField(blank=True, null=True)
     recipients = models.TextField(blank=True, null=True)
-    specialist = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='specialist', blank=True, null=True,
-                                   related_name='spec')
+    specialist = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='specialist', blank=True, null=True)
     control_period = models.DateTimeField(blank=True, null=True)
     date_complited = models.DateTimeField(blank=True, null=True)
     open_order = models.BooleanField(blank=True, null=True)
     close_order = models.BooleanField(blank=True, null=True)
     reply_email = models.BooleanField(blank=True, null=True)
-    uid_division = models.ForeignKey(Division, models.DO_NOTHING, db_column='uid_Division', blank=True,
-                                     null=True)  # Field name made lowercase.
+    uid_division = models.ForeignKey(Division, models.DO_NOTHING, db_column='uid_Division', blank=True, null=True)  # Field name made lowercase.
     html_body = models.TextField(blank=True, null=True)
     date_accepted = models.DateTimeField(blank=True, null=True)
-    is_chat = models.BooleanField(blank=True, null=True)
-
-    def get_absolute_url(self):
-        return reverse('message', kwargs={'pk': self.pk})
-
-    def __str__(self):
-        return str(self.id)
-
-    @property
-    def is_past_due(self):
-        try:
-            return timezone.now() > self.control_period
-        except Exception as s:
-            pass
 
     class Meta:
         managed = False
         db_table = 'email'
-        ordering = ['-datetime_send']
-        verbose_name = 'Заявка'
-        verbose_name_plural = 'Заявки'
 
 
 class Sysdiagrams(models.Model):
@@ -323,3 +251,17 @@ class Sysdiagrams(models.Model):
         managed = False
         db_table = 'sysdiagrams'
         unique_together = (('principal_id', 'name'),)
+
+
+class Todo(models.Model):
+    todo_id = models.AutoField(primary_key=True)
+    todo_content = models.TextField(blank=True, null=True)
+    todo_datetime_add = models.DateTimeField(blank=True, null=True)
+    todo_due_time = models.DateTimeField(blank=True, null=True)
+    todo_in_work = models.BooleanField(blank=True, null=True)
+    todo_completed = models.BooleanField(blank=True, null=True)
+    todo_email = models.ForeignKey(Email, models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'todo'

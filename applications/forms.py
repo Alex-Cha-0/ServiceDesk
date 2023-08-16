@@ -4,7 +4,9 @@ from datetime import datetime
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Division, Email
+from django.forms import ModelForm
+
+from .models import Division, Email, Thema, Category
 from django.contrib.auth.models import User
 
 
@@ -76,3 +78,16 @@ class AddOrder(forms.ModelForm):
         return subject
 
 
+class CategoryChoiceForm(ModelForm):
+    class Meta:
+        model = Category
+        fields = ['ordernumber', 'choice', 'comment']
+        widgets = {
+            'ordernumber': forms.Select(attrs={'class': 'form-control'}),
+            'choice': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'comment': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Комментарий'
+            }),
+
+        }

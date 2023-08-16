@@ -1,6 +1,6 @@
 from django import template
 
-from applications.models import Email, AuthUser, AuthUserGroups, MailSettings
+from applications.models import Email, AuthUser, AuthUserGroups
 
 register = template.Library()
 

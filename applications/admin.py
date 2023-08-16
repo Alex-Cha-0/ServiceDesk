@@ -4,32 +4,19 @@ import os
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from .models import Email, Staff, Division, AuthUserGroups, AuthUser, AuthGroup, Attachments, MailSettings
+from .forms import *
+from .models import *
 
 from django import forms
 
 
-class EmailSettingsForm(forms.ModelForm):
-    class Meta:
-        model = MailSettings
-        fields = "__all__"
-        # widgets = {
-        #     'password': forms.PasswordInput(attrs={'placeholder': "the password will be encrypted"})
-        # }
-
-    def clean_password(self):
-        if self.cleaned_data["password"] == "password":
-            raise forms.ValidationError("very simply")
-        return self.cleaned_data["password"]
-
-
-
+class ChatAdmin(admin.ModelAdmin):
+    list_display = ('message_id', 'chat_id', 'user_name', 'content', 'datetime_send', 'sender_id')
 
 
 class EmailAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'subject', 'sender_name', 'datetime_send', 'uid_division', 'open_order', 'close_order', 'specialist',
-        'get_message')
+        'id', 'subject', 'sender_name', 'datetime_send', 'uid_division', 'open_order', 'close_order', 'specialist')
     list_filter = ('sender_name', 'datetime_send', 'open_order', 'close_order')
     list_display_links = ('id', 'subject')
     search_fields = ('subject', 'sender_name')
@@ -58,15 +45,27 @@ class AttachAdmin(admin.ModelAdmin):
     list_display = ('id', 'id_email', 'link')
 
 
-class EmailSettings(admin.ModelAdmin):
-    form = EmailSettingsForm
-    list_display = ('id', 'host', 'port', 'user', 'password', 'use_tls')
+class CategoryAdmin(admin.ModelAdmin):
+    date_hierarchy = "createddate"
+    list_display = ('orderid', 'createddate', 'ordernumber_id', 'comment')
 
-    # def get_form(self, request, obj=None, **kwargs):
-    #     form = super().get_form(request, obj, **kwargs)
-    #     form.base_fields["password"].label = "Inter password"
-    #     return form
 
+class ThemesAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+
+class CategoryChoiceAdmin(admin.ModelAdmin):
+    list_display = ('category', 'thema',)
+    fields = ('category', 'thema',)
+
+
+admin.site.register(Chat, ChatAdmin)
+
+admin.site.register(CategoryChoice, CategoryChoiceAdmin)
+
+admin.site.register(Thema, ThemesAdmin)
+
+admin.site.register(Category, CategoryAdmin)
 
 admin.site.register(Email, EmailAdmin)
 
@@ -75,8 +74,6 @@ admin.site.register(Staff, StaffAdmin)
 admin.site.register(Division, DivisionAdmin)
 
 admin.site.register(Attachments, AttachAdmin)
-
-admin.site.register(MailSettings, EmailSettings)
 
 admin.site.site_title = 'Менеджер заявок'
 admin.site.site_header = 'Менеджер заявок'

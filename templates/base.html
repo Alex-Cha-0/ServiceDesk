@@ -69,37 +69,64 @@
         {#            <div class="my-position table-responsive">#}
         {#            <div class="row">#}
         <div class="my-position table-responsive">
-            <div class="">
-                <div>
 
-                    <table class="table table-borderless table-sort table-hover" id="myTable2">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="me-2">
+                    <h2 class="display-6 mb-0">Orders</h2>
+                    <div class="card-text">Details and history</div>
 
-                        <thead>
-                        <tr>
-                            <th scope="col" onclick="sortTable(0)">Действия</th>
-                            <th scope="col" onclick="sortTable(1)"></th>
-                            <th scope="col" onclick="sortTable(2)">id</th>
-                            <th scope="col" onclick="sortTable(3)">Тема</th>
-                            <th scope="col" onclick="sortTable(4)">Автор</th>
-                            <th scope="col" onclick="sortTable(5)">Cпециалист</th>
-                            <th scope="col" onclick="sortTable(6)">Cоздана</th>
-                            <th scope="col" onclick="sortTable(7)">Срок</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for data in content %}
-                            {% if data.open_order %}
-                                {% if data.is_past_due %}
-                                    <tr class="table-danger">
-                                        {% else %}
-                                    <tr class="table-success">
-                                {% endif %}
-                            {% elif data.close_order %}
-                                <tr class="table-secondary">
-                                    {% else %}
-                                <tr class="table-primary">
-                            {% endif %}
 
+                </div>
+                <div class="d-flex gap-1">
+                    <button class="btn btn-lg btn-text-primary btn-icon mdc-ripple-upgraded" type="button"
+                            style="--mdc-ripple-fg-size: 28px; --mdc-ripple-fg-scale: 2.7815089640681627; --mdc-ripple-fg-translate-start: 8px, 13px; --mdc-ripple-fg-translate-end: 10px, 10px;">
+                        <i class="fa-solid fa-download" style="color: #6c757d;"></i></button>
+                    <button class="btn btn-lg btn-text-primary btn-icon mdc-ripple-upgraded" type="button">
+                        <i class="fa-solid fa-print" style="color: #6c757d;"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-body p-1">
+                <table class="table table-borderless table-sort table-hover searchable fixed-columns" id="myTable2">
+                    <div class="datatable-top">
+                        <div class="datatable-dropdown">
+                            <label title="Entries per page">
+                                <select class="datatable-selector">
+                                    <option value="5">5</option>
+                                    <option value="10" selected="">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="25">25</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="datatable-search">
+                            <input class="datatable-input" placeholder="Search..." type="search"
+                                   title="Search within table"
+                                   aria-controls="datatablesSimple" id="search-text" onkeyup="tableSearch()">
+                        </div>
+                    </div>
+                    <thead>
+                    <tr>
+                        <th scope="col" onclick="sortTable(0)"></th>
+                        <th scope="col" onclick="sortTable(1)">Действия</th>
+                        <th scope="col" onclick="sortTable(2)"></th>
+                        <th scope="col" onclick="sortTable(3)">id</th>
+                        <th scope="col" onclick="sortTable(4)">Тема</th>
+                        <th scope="col" onclick="sortTable(5)">Автор</th>
+                        <th scope="col" onclick="sortTable(6)">Cпециалист</th>
+                        <th scope="col" onclick="sortTable(7)">Cоздана</th>
+                        <th scope="col" onclick="sortTable(8)">Срок</th>
+                        <th scope="col" onclick="sortTable(9)">Статус</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for data in content %}
+                        <tr class="table-borderless" title="{{ data.text_body|striptags|truncatechars:80 }}">
+                            <td>{% if data.is_chat %}
+                                <a title="Открыт чат"><i class="fa-regular fa-message" style="color: #ff7575;"></i></a>
+                            {% endif %}</td>
                             <td>
                                 {% if data.open_order %}
                                     <a class="link-dark" title="Принять"
@@ -112,6 +139,7 @@
                                 {% endif %}
 
                                 <a class="link-success" title="Закрыть"
+                                        {#                                   href="{% url "close_order" message_id=data.id %}"#}
                                    href="{% url "close_order" message_id=data.id %}"
                                    onclick="return configMsgCloseOrder();"><i class="bi bi-check-square"></i></a>
                                 <a class="link-danger" title="Удалить запись"
@@ -120,8 +148,29 @@
                                         class="bi bi-x-square"></i></a>
                                 <a class="link-primary" title="Добавить в список дел"><i
                                         class="far fa-chart-bar"></i></a>
-                                <a title="Выбрать категории" id="show-checkboxes"><i class="fa-solid fa-box"
-                                                                                     style="color: #328b61;"></i></a>
+{#                                <a title="Выбрать категории" id="show-checkboxes"><i class="fa-solid fa-box"#}
+{#                                                                                     style="color: #328b61;"></i></a>#}
+
+                                {#                                <div id="myModal" class="form-modal" style="display: none">#}
+                                {#                                    <div class="modal-content">#}
+                                {#                                        <p>{{ data.id }}</p>#}
+                                {#                                        <span class="close">&times;</span>#}
+                                {#                                        <div class="form-check">#}
+                                {#                                            <input class="form-check-input" type="checkbox" value=""#}
+                                {#                                                   id="flexCheckDefault">#}
+                                {#                                            <label class="form-check-label" for="flexCheckDefault">#}
+                                {#                                                Default checkbox#}
+                                {#                                            </label>#}
+                                {#                                        </div>#}
+                                {#                                        <div class="form-check">#}
+                                {#                                            <input class="form-check-input" type="checkbox" value=""#}
+                                {#                                                   id="flexCheckChecked">#}
+                                {#                                            <label class="form-check-label" for="flexCheckChecked">#}
+                                {#                                                Checked checkbox#}
+                                {#                                            </label>#}
+                                {#                                        </div>#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
                             </td>
 
                             {% if data.yes_no_attach %}
@@ -135,14 +184,27 @@
                             <td>{{ data.specialist }}</td>
                             <td>{{ data.datetime_send }}</td>
                             <td>{{ data.control_period }}</td>
+                            <td>
+                                {% if data.open_order %}
+                                    {% if data.is_past_due %}
+                                        <span class="badge bg-danger">Deadline</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Processing</span>
+                                    {% endif %}
+                                {% elif data.close_order %}
+                                    <span class="badge bg-success">Completed</span>
+                                {% else %}
+                                    <span class="badge bg-primary">New Order</span>
+                                {% endif %}
 
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
+
+
         </div>
     {% endblock %}
 

@@ -13,3 +13,147 @@ servise-desk-navbar {
     position: relative;
 }
 
+/*.datatable-top {*/
+/*    display: flex;*/
+/*    flex-direction: row;*/
+/*    justify-content: space-between;*/
+/*}*/
+
+.datatable-top {
+    padding: 0 0 1rem;
+}
+
+.datatable-bottom, .datatable-top {
+    padding: 8px 10px;
+}
+
+.datatable-top::after, .datatable-bottom::after {
+    clear: both;
+    content: " ";
+    display: table;
+}
+
+.datatable-bottom::after, .datatable-top::after {
+    clear: both;
+    content: " ";
+    display: table;
+}
+
+.form-control:hover, .datatable-input:hover, .form-select:hover, .datatable-selector:hover {
+    border-color: #000;
+}
+
+.datatable-selector {
+    width: auto;
+    display: inline-block;
+    padding-left: 1.125rem;
+    padding-right: 2.125rem;
+    margin-right: 0.25rem;
+}
+
+.form-select, .datatable-selector {
+    display: block;
+    width: 100%;
+    padding: 0.40625rem 3rem 0.40625rem 1rem;
+    -moz-padding-start: calc(1rem - 3px);
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #424242;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px 12px;
+    border: 1px solid #9e9e9e;
+    border-radius: 0.25rem;
+    transition: box-shadow 0.15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.datatable-selector {
+    padding: 6px;
+}
+
+.datatable-top > nav:first-child, .datatable-top > div:first-child, .datatable-bottom > nav:first-child, .datatable-bottom > div:first-child {
+    float: left;
+}
+
+.datatable-bottom > div:first-child, .datatable-bottom > nav:first-child, .datatable-top > div:first-child, .datatable-top > nav:first-child {
+    float: left;
+}
+
+.datatable-top > nav:last-child, .datatable-top > div:last-child, .datatable-bottom > nav:last-child, .datatable-bottom > div:last-child {
+    float: right;
+}
+
+.datatable-bottom > div:last-child, .datatable-bottom > nav:last-child, .datatable-top > div:last-child, .datatable-top > nav:last-child {
+    float: right;
+}
+
+.form-control, .datatable-input {
+    display: block;
+    width: 100%;
+    padding: 0.40625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #424242;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #9e9e9e;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.25rem;
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+[type=search] {
+    outline-offset: -2px;
+    -webkit-appearance: textfield;
+}
+
+.datatable-input {
+    padding: 6px 12px;
+}
+
+/* The Modal (background) */
+/*.form-modal {*/
+/*    display: none; !* Hidden by default *!*/
+/*    position: fixed; !* Stay in place *!*/
+/*    z-index: 1; !* Sit on top *!*/
+/*    padding-top: 100px; !* Location of the box *!*/
+/*    left: 0;*/
+/*    top: 0;*/
+/*    width: 100%; !* Full width *!*/
+/*    height: 100%; !* Full height *!*/
+/*    overflow: auto; !* Enable scroll if needed *!*/
+/*    background-color: rgb(0,0,0); !* Fallback color *!*/
+/*    background-color: rgba(0,0,0,0.4); !* Black w/ opacity *!*/
+/*}*/
+
+/*!* Modal Content *!*/
+/*.modal-content {*/
+/*    background-color: #fefefe;*/
+/*    margin: auto;*/
+/*    padding: 20px;*/
+/*    border: 1px solid #888;*/
+/*    width: 30%;*/
+/*}*/
+
+/*!* The Close Button *!*/
+/*.close {*/
+/*    color: #aaaaaa;*/
+/*    float: right;*/
+/*    font-size: 28px;*/
+/*    font-weight: bold;*/
+/*}*/
+
+/*.close:hover,*/
+/*.close:focus {*/
+/*    color: #000;*/
+/*    text-decoration: none;*/
+/*    cursor: pointer;*/
+/*}*/

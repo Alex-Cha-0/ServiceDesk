@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path('', Home.as_view(), name='home'),
     # path('accepted/<int:open_order>/', HomeByAccepted.as_view(), name='homebyaccepted')
-    path('', include('applications.urls')),
+    path('applications/', include('applications.urls')),
     path('todo/', include('todo_list.urls'))
 
 ]

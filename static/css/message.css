@@ -5,6 +5,7 @@
 }
 
 .message-info {
+    max-width: 247px;
     margin-right: 20px;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 0.25rem;
@@ -59,6 +60,7 @@
 .message-control-period {
     background-color: #1c87c9;
 }
+
 @keyframes good_period {
     0% {
         background-color: #2ba805;
@@ -73,6 +75,7 @@
         box-shadow: 0 0 3px #2ba805;
     }
 }
+
 @keyframes bad_period {
     0% {
         background-color: #f86f70;
@@ -89,8 +92,9 @@
 }
 
 .message-good-period {
-      animation: good_period 1300ms infinite;
+    animation: good_period 1300ms infinite;
 }
+
 .message-bad-period {
     animation: bad_period 1300ms infinite;
 }

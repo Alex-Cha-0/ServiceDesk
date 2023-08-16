@@ -47,37 +47,88 @@
                 {% else %}
                     <p class="mb-1 message-good-period"><small><b>Срок</b> - {{ data.control_period }}</small></p>
                 {% endif %}
-
-                {% if data.close_order %}
-                    <p class="mb-1 message-close-green"><small><b>Закрыта</b> - {{ data.date_complited }}</small></p>
-                {% else %}
-                    <p class="mb-1 message-close-red"><small><b>Закрыта</b> - {{ data.date_complited }}</small></p>
-                {% endif %}
                 <p class="mb-1"><small><b>Тема</b> - {{ data.subject }}</small></p>
                 <p class="mb-1"><small><b>Email</b> - {{ data.sender_email }}</small></p>
+                {% if data.close_order %}
+                    <p class="mb-1 message-close-green"><small><b>Закрыта</b> - {{ data.date_complited }}</small></p>
+
+                    <ul class="list-group">
+                        <hr>
+                        <li class="list-group-item list-group-item-light"
+                            aria-current="true"><b>Закрыта по категориям:</b></li>
+                        {% for category in category.choice.all %}
+                            <li class="list-group-item list-group-item-primary"
+                                aria-current="true"><small>{{ category.get_name_display }}</small></li>
+                        {% endfor %}
+                        <li class="list-group-item list-group-item-light"
+                            aria-current="true"><p><small><b>Комментарий:</b></small></p>
+                            <small>{{ category.comment }}</small></li>
+
+                    </ul>
+
+                {% else %}
+                    <p class="mb-1 message-close-red"><small><b>Закрыта</b> - {{ data.date_complited }}</small></p>
+
+                {% endif %}
             </div>
+            {#            <div class="message-attachments">#}
+            {#                {% if data.yes_no_attach %}#}
+            {#                    <i class="bi bi-paperclip"></i>#}
+            {#                {% else %}#}
+            {##}
+            {#                {% endif %}#}
+            {#                {% for attach in attachment %}#}
+            {#                    <p><a href="{{ dir }}{{ attach.link }}"#}
+            {#                          class="link-info p-2 border rounded-3 bs-popover-right">{{ attach.name }}</a></p>#}
+            {##}
+            {#                    <div class="card" style="width: 10rem;">#}
+            {##}
+            {#                        <img src="{{ dir }}{{ attach.link }}" class="card-img-top" alt="...">#}
+            {#                        <div class="card-body">#}
+            {#                            <p class="card-text"><small>{{ attach.name }}</small></p>#}
+            {##}
+            {#                            <a href="{{ dir }}{{ attach.link }}" class="card-link"><i class="fa-solid fa-download" style="color: #6c757d;"></i></a>#}
+            {#                        </div>#}
+            {#                    </div>#}
+            {##}
+            {#                {% endfor %}#}
+            {##}
+            {#            </div>#}
+        </div>
+        <div class="body-text-body">
+            {{ data.text_body|safe }}
+            <hr>
             <div class="message-attachments">
                 {% if data.yes_no_attach %}
                     <i class="bi bi-paperclip"></i>
                 {% else %}
 
                 {% endif %}
-                {% for attach in attachment %}
-                    <p><a href="{{ dir }}{{ attach.link }}"
-                          class="link-info p-2 border rounded-3 bs-popover-right">{{ attach.name }}</a></p>
-                {% endfor %}
+                <div class="row row-cols-1 row-cols-md-4 g-5">
+                    {% for attach in attachment %}
+                        {#                    <p><a href="{{ dir }}{{ attach.link }}"#}
+                        {#                          class="link-info p-2 border rounded-3 bs-popover-right">{{ attach.name }}</a></p>#}
+                        <div class="col">
+                            <div class="card border-light mb-3 change-card" style="width: 10rem;">
+                                <div class="card-header" title="{{ attach.name }}"><small>{{ attach.name|truncatechars:13 }}</small></div>
+                                <a href="{{ dir }}{{ attach.link }}">
+                                    <img src="{{ dir }}{{ attach.link }}" class="card-img-top"
+                                         alt="{{ attach.slice_string }}"></a>
+                                <div class="card-footer"><small>{{ attach.slice_string }}</small></div>
+                            </div>
 
+                        </div>
+
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-        <div class="body-text-body">
-            {{ data.text_body|safe }}
         </div>
         <div class="card">
             <div class="card-header">Общение с {{ data.sender_name }}</div>
             <div class="card-body height3">
                 <ul class="chat-list">
                     {% for cont in chat_data %}
-                        {% if cont.sender == 1 %}
+                        {% if cont.sender_id == 1 %}
                             <li class="in">
                                 {% else %}
                             <li class="out">
