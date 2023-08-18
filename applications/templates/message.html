@@ -1,20 +1,29 @@
 {% extends 'base.html' %}
 
-
 {% block title %} Message: {{ data.id }} от {{ data.sender_name }} :: {{ block.super }} {% endblock %}
 
-{% block table %} {% endblock %}
-{% block buttons %} {% endblock %}
-{% block menu %} {% endblock %}
+{% block messages %}
+    {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endif %}
+
+            {% endfor %}
+        {% endif %}
+{% endblock %}
+
 {% block content %}
-
-
     {#New verison message.html    #}
     <div class="body-message my-position">
         <div class="message-info">
             <div class="message-info-content">
-
-
                 <div class="action-button">
                     {% if data.open_order %}
                         <button type="button"
@@ -34,8 +43,6 @@
                     {% endif %}
                     {#                        <button type="button" onclick="location.href='{% url 'new' message_id=data.id %}'" class="btn btn-outline-info btn-sm" name="close">Закрыть</button>#}
                 </div>
-
-
                 <h6>Отправитель - {{ data.sender_name }}</h6>
                 <p class="mb-1"><small><b>Создана</b> - {{ data.datetime_send }}</small></p>
                 <p class="mb-1"><small><b>Принята</b> - {{ data.date_accepted }}</small></p>
@@ -109,7 +116,7 @@
                         {#                    <p><a href="{{ dir }}{{ attach.link }}"#}
                         {#                          class="link-info p-2 border rounded-3 bs-popover-right">{{ attach.name }}</a></p>#}
                         <div class="col">
-                            <div class="card border-light mb-3 change-card" style="width: 10rem;">
+                            <div class="card border-light mb-3 change-card" style="width: 6rem;">
                                 <div class="card-header" title="{{ attach.name }}"><small>{{ attach.name|truncatechars:13 }}</small></div>
                                 <a href="{{ dir }}{{ attach.link }}">
                                     <img src="{{ dir }}{{ attach.link }}" class="card-img-top"

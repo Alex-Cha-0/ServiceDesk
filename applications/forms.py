@@ -10,6 +10,9 @@ from .models import Division, Email, Thema, Category
 from django.contrib.auth.models import User
 
 
+def get_now():
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
 class ContactForm(forms.Form):
     subject = forms.CharField(label='Тема', widget=forms.TextInput(
         attrs={"class": "form-control", 'placeholder': "Тема письма"}))
@@ -50,6 +53,7 @@ class UserRegisterForm(UserCreationForm):
 
 
 class AddOrder(forms.ModelForm):
+
     class Meta:
         model = Email
         fields = ['subject', 'sender_name', 'sender_email', 'datetime_send', 'text_body', 'uid_division']
@@ -69,7 +73,7 @@ class AddOrder(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['datetime_send'].initial = datetime.now()
+        self.fields['datetime_send'].initial = get_now
 
     def clean_data(self):
         subject = self.cleaned_data['subject']

@@ -1,12 +1,12 @@
 
 .servise-desk {
-    margin-top: 50px;
+    margin-top: 20px;
     margin-right: 10px;
     display: flex;
     flex-direction: row;
     align-content: center;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: baseline;
 }
 
 servise-desk-navbar {

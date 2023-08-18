@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Q
 from django.db.models.functions import Lower
 from django.http import request
 from django.shortcuts import render, get_object_or_404, redirect
@@ -202,13 +203,13 @@ class HomeApp(MyMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(HomeApp, self).get_context_data(**kwargs)
         context['title'] = self.get_upper('Главная страница')
-        message_id = self.kwargs.get('message_id', None)
-        context['data_message'] = Attachments.objects.all()
+        # message_id = self.kwargs.get('message_id', None)
+        # context['data_message'] = Attachments.objects.all()
 
         return context
 
     def get_queryset(self):
-        return Email.objects.filter(close_order=False)
+        return Email.objects.all()
 
 
 class HomeByAccepted(ListView):
@@ -268,7 +269,7 @@ class HomeByNew(ListView):
         return context
 
     def get_queryset(self):
-        return Email.objects.filter(open_order=False, close_order=False)
+        return Email.objects.filter(Q(open_order=None, close_order=None) | Q(open_order=False, close_order=False))
 
 
 class GetSpecialist(ListView):
