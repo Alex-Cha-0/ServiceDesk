@@ -6,26 +6,28 @@
     {#    <div class="position-fixed">#}
     <div class="sidebar">
         <div class="list-group list-group-flush mx-2 mt-6">
-            <a href="{% url 'home' %}" class="list-group-item list-group-item-action py-2 ripple " aria-current="true">
-                <i href="{% url 'home' %}" class="fa-solid fa-home fa-fw me-3"></i><span>Главная</span>
+            <a href="{% url 'applications:home' %}" class="list-group-item list-group-item-action py-2 ripple " aria-current="true">
+                <i href="{% url 'applications:home' %}" class="fa-solid fa-home fa-fw me-3"></i><span>Главная</span>
             </a>
-            <a href="{% url 'new' %}" class="list-group-item list-group-item-action py-2 ripple">
-                <i href="{% url 'new' %}" class="fas fa-chart-area fa-fw me-3"></i><span>Новые</span>
+            <a href="{% url 'applications:new' %}" class="list-group-item list-group-item-action py-2 ripple">
+                <i href="{% url 'applications:new' %}" class="fas fa-chart-area fa-fw me-3"></i><span>Новые</span>
             </a>
             {#            <a href="{% url 'home' %}" class="list-group-item list-group-item-action py-2 ripple"><i#}
             {#                    class="fa-regular fa-rectangle-list fa-fw me-3"></i><span>Показать все</span></a>#}
-            <a href="{% url 'accepted' %}" class="list-group-item list-group-item-action py-2 ripple"><i
-                    href="{% url 'accepted' %}"
+            <a href="{% url 'applications:accepted' %}" class="list-group-item list-group-item-action py-2 ripple"><i
+                    href="{% url 'applications:accepted' %}"
                     class="fa-solid fa-check-to-slot fa-fw me-3"></i><span>Принятые</span></a>
-            <a href="{% url 'close' %}" class="list-group-item list-group-item-action py-2 ripple ">
-                <i href="{% url 'close' %}" class="fas fa-lock fa-fw me-3"></i><span>Закрытые</span>
+            <a href="{% url 'applications:close' %}" class="list-group-item list-group-item-action py-2 ripple ">
+                <i href="{% url 'applications:close' %}" class="fas fa-lock fa-fw me-3"></i><span>Закрытые</span>
             </a>
-            <a href="{% url 'todo_home' %}" class="list-group-item list-group-item-action py-2 ripple"><i
-                    href="{% url 'todo_home' %}"
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'todo_list:todo_home' request.user.id %}" class="list-group-item list-group-item-action py-2 ripple"><i
+                    href="{% url 'todo_list:todo_home' request.user.id %}"
                     class="fas fa-chart-bar fa-fw me-3"></i><span>Список дел</span></a>
-            <a href="{% url 'add_order' %}" class="list-group-item list-group-item-action py-2 ripple "><i
-                    href="{% url 'add_order' %}"
+            <a href="{% url 'applications:add_order' %}" class="list-group-item list-group-item-action py-2 ripple "><i
+                    href="{% url 'applications:add_order' %}"
                     class="fas fa-globe fa-fw me-3"></i><span>Создать заявку</span></a>
+            {% endif %}
             <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
                     class="fas fa-building fa-fw me-3"></i><span>Partners</span></a>
             <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i

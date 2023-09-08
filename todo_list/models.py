@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from datetime import datetime
 
@@ -11,6 +12,7 @@ class ToDo(models.Model):
     todo_due_time = models.DateTimeField(blank=True, null=True)
     todo_in_work = models.BooleanField(default=False, blank=True, null=True)
     todo_completed = models.BooleanField(default=False, blank=True, null=True)
+    todo_spec = models.ForeignKey(User, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         managed = True

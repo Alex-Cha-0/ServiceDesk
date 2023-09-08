@@ -218,7 +218,7 @@ class Chat(models.Model):
     class Meta:
         managed = True
         db_table = 'chat'
-        ordering = ['datetime_send']
+        ordering = ['-datetime_send']
 
     def __str__(self):
         return str(self.chat_id)
@@ -269,6 +269,20 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
+class OrderAuthor(models.Model):
+    id = models.AutoField(primary_key=True)
+    author = models.CharField(blank=True, null=True, max_length=150)
+    email = models.CharField(blank=True, null=True, max_length=254)
+    order_id = models.ForeignKey('Email', on_delete=models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = True
+        ordering = ['author']
+
+    def __str__(self):
+        return self.author
+
+
 class Email(models.Model):
     subject = models.TextField(blank=True, null=True)
     sender_name = models.TextField(blank=True, null=True)
@@ -290,9 +304,11 @@ class Email(models.Model):
     html_body = models.TextField(blank=True, null=True)
     date_accepted = models.DateTimeField(blank=True, null=True)
     is_chat = models.BooleanField(blank=True, null=True)
+    author = models.ForeignKey(OrderAuthor, models.DO_NOTHING, blank=True,
+                               null=True, related_name='author_order')
 
     def get_absolute_url(self):
-        return reverse('message', kwargs={'pk': self.pk})
+        return reverse('applications:message', kwargs={'pk': self.pk})
 
     def __str__(self):
         return str(self.id)

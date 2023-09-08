@@ -5,6 +5,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.forms import ModelForm
+from django.http import request
 
 from .models import Division, Email, Thema, Category
 from django.contrib.auth.models import User
@@ -12,6 +13,7 @@ from django.contrib.auth.models import User
 
 def get_now():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
 
 class ContactForm(forms.Form):
     subject = forms.CharField(label='Тема', widget=forms.TextInput(
@@ -53,7 +55,6 @@ class UserRegisterForm(UserCreationForm):
 
 
 class AddOrder(forms.ModelForm):
-
     class Meta:
         model = Email
         fields = ['subject', 'sender_name', 'sender_email', 'datetime_send', 'text_body', 'uid_division']
@@ -95,3 +96,12 @@ class CategoryChoiceForm(ModelForm):
             }),
 
         }
+
+
+# class SpecChoiceForm(forms.Form):
+#     specialist = forms.CharField(label='content', widget=forms.SelectMultiple(
+#         attrs={"class": "form-control"}))
+#
+#
+# class DateDeadlineForm(forms.Form):
+#     control_period = forms.DateTimeInput

@@ -37,7 +37,5 @@ def get_count_in_work(context):
     except:
         pass
 
-# @register.simple_tag(takes_context=True)
-# def get_quary_chat(context):
-#     message_id = context['id']
-#     return Chat.objects.filter(chat_id=message_id)
+
+

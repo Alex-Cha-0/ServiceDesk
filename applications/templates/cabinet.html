@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block nav %} {% include 'inc/_nav.html' %} {% endblock %}
+
+{% block title %} my cabinet:: {{ block.super }} {% endblock %}
+
+{% block content %}
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-3">
+                <br>
+                <p class="h5 text-bg-secondary p-1">Список заявок по авторам</p>
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                    {% for data in author %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapse{{ data.id }}" aria-expanded="false"
+                                        aria-controls="flush-collapse{{ data.id }}">
+                                    {{ data.author }}
+                                </button>
+                            </h2>
+                            <div id="flush-collapse{{ data.id }}" class="accordion-collapse collapse"
+                                 data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    {% for e_data in email_data %}
+
+                                        {% if data.author == e_data.author.author %}
+
+                                            <div class="accordion accordion-flush" id="accordionFlushExamplein">
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header">
+                                                        <button class="accordion-button collapsed" type="button"
+                                                                data-bs-toggle="collapse"
+                                                                data-bs-target="#flush-collapse{{ e_data.id }}"
+                                                                aria-expanded="false"
+                                                                aria-controls="flush-collapse{{ e_data.id }}">
+                                                            {{ e_data.datetime_send }}
+                                                            | {{ e_data.subject }}
+                                                        </button>
+                                                    </h2>
+                                                    <div id="flush-collapse{{ e_data.id }}"
+                                                         class="accordion-collapse collapse"
+                                                         data-bs-parent="#accordionFlushExamplein">
+                                                        <div class="accordion-body">
+                                                            {{ e_data.text_body|safe }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% else %}
+
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-4">
+                <br>
+                <p class="h5 text-bg-secondary p-1">Текущая информация</p>
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th scope="col">Активные</th>
+                        <th scope="col">Выполненные</th>
+                        <th scope="col">Просроченные</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><p class="h5 text-bg-warning p-1">{{ active }}</p></td>
+                        <td><p class="h5 text-bg-success p-1">{{ success }}</p></td>
+                        <td><p class="h5 text-bg-danger p-1">{{ is_past }}</p></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-3">
+            <br>
+            <p class="h5 text-bg-secondary p-1">Список дел</p>
+                <ol class="list-group list-group-numbered">
+                    {% for todos in todo %}
+
+                        <li class="list-group-item">{{ todos.todo_content }}</li>
+                    {% endfor %}
+                </ol>
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

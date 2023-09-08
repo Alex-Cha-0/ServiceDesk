@@ -10,17 +10,25 @@ from .models import *
 from django import forms
 
 
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ('id', 'author', 'email', 'order_id')
+    fields = ('author', 'email')
+
+
 class ChatAdmin(admin.ModelAdmin):
     list_display = ('message_id', 'chat_id', 'user_name', 'content', 'datetime_send', 'sender_id')
 
 
 class EmailAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'subject', 'sender_name', 'datetime_send', 'uid_division', 'open_order', 'close_order', 'specialist')
+        'id', 'subject', 'sender_name', 'datetime_send', 'uid_division', 'open_order', 'close_order', 'specialist',
+        'author')
     list_filter = ('sender_name', 'datetime_send', 'open_order', 'close_order')
     list_display_links = ('id', 'subject')
     search_fields = ('subject', 'sender_name')
-    fields = ('id', 'subject', 'sender_name', 'datetime_send', 'open_order', 'close_order', 'specialist', 'get_message')
+    fields = (
+        'id', 'subject', 'sender_name', 'datetime_send', 'open_order', 'close_order', 'specialist', 'get_message',
+        'author')
     readonly_fields = ('id', 'subject', 'sender_name', 'datetime_send', 'uid_division', 'get_message')
     save_on_top = True
 
@@ -34,7 +42,7 @@ class EmailAdmin(admin.ModelAdmin):
 
 
 class StaffAdmin(admin.ModelAdmin):
-    list_display = ('id', 'employee', 'uid_division')
+    list_display = ('id', 'employee', 'uid_division', 'email_staff')
 
 
 class DivisionAdmin(admin.ModelAdmin):
@@ -58,6 +66,8 @@ class CategoryChoiceAdmin(admin.ModelAdmin):
     list_display = ('category', 'thema',)
     fields = ('category', 'thema',)
 
+
+admin.site.register(OrderAuthor, AuthorAdmin)
 
 admin.site.register(Chat, ChatAdmin)
 

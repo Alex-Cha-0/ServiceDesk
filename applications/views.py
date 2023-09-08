@@ -3,6 +3,8 @@ import time
 from datetime import timedelta
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.db.models.functions import Lower
@@ -10,6 +12,7 @@ from django.http import request
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView
 
+from todo_list.models import ToDo
 from .models import *
 from .forms import AddOrder, UserRegisterForm, UserLoginForm, ContactForm, CategoryChoiceForm
 from .utils import MyMixin
@@ -18,8 +21,10 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.core.mail import EmailMessage
 from bs4 import BeautifulSoup
+from django.db.models import Count
 
 
+@login_required
 def close_order(request, message_id):
     data_email = Email.objects.get(id=message_id)
     if request.method == 'POST':
@@ -39,6 +44,7 @@ def close_order(request, message_id):
     return render(request, 'add_category.html', {"form": form})
 
 
+@login_required
 def send_email(request, message_id):
     email_data = Email.objects.get(id=message_id)
     chat_data = Chat.objects.filter(chat_id=message_id)
@@ -50,12 +56,14 @@ def send_email(request, message_id):
         new_p2 = soup.new_tag('p')
         new_hr = soup.new_tag('hr')
         new_p.string = content
-        new_p2.string = 'date: ' + str(email_data.datetime_send)
+        new_p2.string = 'date: ' + str(datetime.now())
         div_tag = soup.find('div')
         solid_hr = soup.new_tag('hr')
         solid_hr['style'] = " height: 12px;" \
                             "border: 0;" \
                             "box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);"
+
+        div_tag.insert_before(new_p, new_p2, new_hr)
 
         for i in chat_data:
             # hr = soup.new_tag('hr')
@@ -77,10 +85,11 @@ def send_email(request, message_id):
                 chat_div.insert(1, chat_username)
                 chat_div.insert(2, chat_content)
                 chat_div.insert(3, chat_datetime)
-                chat_div['style'] = "background: #5a99ee;" \
-                                    "color: white;" \
-                                    "margin-right: 50px;" \
-                                    "float: left;"
+                chat_div['style'] = "margin-right: 50px;" \
+                                    "float: left;" \
+                                    "font-family: cursive;" \
+                                    "border: 1px solid black;" \
+                                    "border-radius: 6px;"
                 div_tag.insert_before(chat_div)
             else:
                 # Orange color
@@ -94,17 +103,18 @@ def send_email(request, message_id):
                 chat_div['style'] = "float: right;" \
                                     "margin-left: 50px;" \
                                     "text-align: right;" \
-                                    "background: #fc6d4c;" \
-                                    "color: white;"
+                                    "font-family: cursive;" \
+                                    "border: 1px dashed black;" \
+                                    "border-radius: 6px;"
                 div_tag.insert_before(chat_div)
 
-        div_tag.insert_before(new_p, new_p2, new_hr)
+        # div_tag.insert_before(new_p, new_p2, new_hr)
         my_html_string = str(soup).replace("'", '')
         return my_html_string
 
     if request.method == 'POST':
         form = ContactForm(request.POST,
-                           initial={'subject': f're: {email_data.subject}', 'to': email_data.sender_email})
+                           initial={'subject': f're: {email_data.subject}', 'to': email_data.author.email, 'cc_myself': email_data.copy})
 
         if form.is_valid():
             subject = form.cleaned_data['subject']
@@ -148,7 +158,7 @@ def register(request):
             user = form.save()
             login(request, user)
             messages.success(request, 'Регистрация успешна')
-            return redirect('home')
+            return redirect('applications:home')
         else:
             messages.error(request, 'Ошибка регистрации')
     else:
@@ -163,7 +173,7 @@ def user_login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('home')
+            return redirect('applications:home')
     else:
         form = UserLoginForm()
 
@@ -172,7 +182,7 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
-    return redirect('login')
+    return redirect('applications:login')
 
 
 # class NewGetMessage(MyMixin, ListView):
@@ -208,23 +218,19 @@ class HomeApp(MyMixin, ListView):
 
         return context
 
-    def get_queryset(self):
-        return Email.objects.all()
-
 
 class HomeByAccepted(ListView):
     model = Email
     template_name = 'index.html'
     context_object_name = 'content'
     paginate_by = 15
+    queryset = Email.objects.filter(open_order=True)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Принятые'
+        context['accepted_by'] = f'Accepted by all'
         return context
-
-    def get_queryset(self):
-        return Email.objects.filter(open_order=True)
 
 
 class AcceptedByUser(ListView):
@@ -235,7 +241,8 @@ class AcceptedByUser(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Принятые {self.request.user}'
+        context['title'] = f'Accepted by {self.request.user}'
+        context['accepted_by'] = f'Accepted by {self.request.user}'
         return context
 
     def get_queryset(self):
@@ -247,14 +254,12 @@ class HomeByClosed(ListView):
     template_name = 'index.html'
     context_object_name = 'content'
     paginate_by = 15
+    queryset = Email.objects.filter(close_order=True)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Закрытые'
         return context
-
-    def get_queryset(self):
-        return Email.objects.filter(close_order=True)
 
 
 class HomeByNew(ListView):
@@ -262,14 +267,12 @@ class HomeByNew(ListView):
     template_name = 'index.html'
     context_object_name = 'content'
     paginate_by = 15
+    queryset = Email.objects.filter(Q(open_order=None, close_order=None) | Q(open_order=False, close_order=False))
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Новые'
         return context
-
-    def get_queryset(self):
-        return Email.objects.filter(Q(open_order=None, close_order=None) | Q(open_order=False, close_order=False))
 
 
 class GetSpecialist(ListView):
@@ -290,28 +293,26 @@ class GetMessage(LoginRequiredMixin, DetailView):
     model = Email
     template_name = "message.html"
     context_object_name = 'data'
-    raise_exception = True
 
     def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(GetMessage, self).get_context_data(**kwargs)
+        message_id = self.kwargs.get('pk', None)
+        context['attachment'] = Attachments.objects.filter(id_email=message_id)
+        context['dir'] = settings.DIRECTORY_ATTACHMENTS
+        context['chat_data'] = Chat.objects.filter(chat_id=message_id)
         try:
-            context = super(GetMessage, self).get_context_data(**kwargs)
-            message_id = self.kwargs.get('pk', None)
-            context['attachment'] = Attachments.objects.filter(id_email=message_id)
-            context['dir'] = settings.DIRECTORY_ATTACHMENTS
-            context['chat_data'] = Chat.objects.filter(chat_id=message_id)
             context['category'] = Category.objects.get(ordernumber=message_id)
-            return context
         except Exception as s:
-            pass
-        finally:
-            return context
+            print(s)
+
+        context['users_from_active_group'] = User.objects.filter(groups__name=self.request.user.groups.get().name)
+        return context
 
 
 class CreateOrder(LoginRequiredMixin, CreateView):
     form_class = AddOrder
     template_name = 'add_order.html'
     # raise_exception = True
-    login_url = '/admin/'
 
 
 # def add_order(requests):
@@ -368,6 +369,7 @@ class OpenOrder(LoginRequiredMixin, ListView):
         return Email.objects.filter(close_order=False)
 
 
+@login_required
 def message_open_order(requests, message_id):
     mod = Email.objects.get(id=message_id)
     spec = AuthUser.objects.get(id=requests.user.id)
@@ -408,17 +410,46 @@ class DeleteOrder(LoginRequiredMixin, ListView):
         mod.delete()
         return Email.objects.filter(close_order=True)
 
-# def delete_order(requests, message_id):
-#     mod = Email.objects.get(id=message_id)
-#     mod.delete()
-#     # mod.open_order = 0  # change field
-#     # mod.close_order = 1
-#     # mod.save()
-#     model = Email.objects.all().order_by('-id')
-#     context = {
-#         'content': model
-#     }
-#     return render(requests, 'index.html', context)
 
-# def message_accept(request, message_id):
-#     data = Email.objects.get(id=message_id)
+class Cabinet(LoginRequiredMixin, DetailView):
+    template_name = 'cabinet.html'
+    queryset = AuthUser.objects.all()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        try:
+            context = super(Cabinet, self).get_context_data(**kwargs)
+            user_id = self.kwargs.get('pk', None)
+            context['email_data'] = Email.objects.select_related().filter(specialist=user_id)
+            context['author'] = (set(OrderAuthor.objects.filter(author_order__specialist_id=user_id)))
+            context['active'] = Email.objects.filter(specialist=user_id, open_order=True).count()
+            context['success'] = Email.objects.filter(specialist=user_id, close_order=True).count()
+            context['is_past'] = Email.objects.filter(specialist=user_id, control_period__lt=timezone.now(),
+                                                      open_order=True).count()
+            context['todo'] = ToDo.objects.filter(todo_spec=user_id, todo_completed=False)
+            # context['count_data_orders'] = Email.objects.annotate(total_orders=Count('orderauthor') )
+
+            return context
+        except Exception as s:
+            pass
+        finally:
+            return context
+
+
+@permission_required("app_email.change_app_email")
+def add_spec(request, message_id):
+    # получаем из данных запроса POST отправленные через форму данные
+    spec = request.POST.get("specialist", "Undefined")
+    mod = Email.objects.get(id=message_id)
+    spec_ = AuthUser.objects.get(username=spec)
+    mod.specialist = spec_
+    mod.save()
+    return redirect(f'/applications/message/{message_id}')
+
+
+@permission_required("app_email.change_app_email")
+def extend_the_period(request, message_id):
+    date = request.POST.get("date")
+    mod = Email.objects.get(id=message_id)
+    mod.control_period = date
+    mod.save()
+    return redirect(f'/applications/message/{message_id}')

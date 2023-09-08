@@ -4,48 +4,88 @@
 
 {% block messages %}
     {% if messages %}
-            {% for message in messages %}
-                {% if message.tags == 'error' %}
-                    <div class="alert alert-danger" role="alert">
-                        {{ message }}
-                    </div>
-                {% else %}
-                    <div class="alert alert-{{ message.tags }}" role="alert">
-                        {{ message }}
-                    </div>
-                {% endif %}
+        {% for message in messages %}
+            {% if message.tags == 'error' %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% else %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
 
-            {% endfor %}
-        {% endif %}
+        {% endfor %}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
     {#New verison message.html    #}
     <div class="body-message my-position">
+        <div class="actionlist mr-3">
+            {% if perms.app_email.change_app_email %}
+            <form method="post" class="border border-1 rounded mb-2" action="{% url 'applications:add_spec' message_id=data.id %}">
+                {% csrf_token %}
+                <div class="mb-1">
+                    <label for="Select" class="form-label">Назначить на...</label>
+                    <select id="Select" class="form-select" name="specialist">
+                        {% for user in users_from_active_group %}
+                            <option>{{ user.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-outline-info">Отправить</button>
+            </form>
+            <form method="post" class="border border-1 rounded mb-2" action="{% url 'applications:extend_the_period' message_id=data.id %}">
+                {% csrf_token %}
+                <label for="date-deadline" class="form-label">Продлить срок</label>
+                <div class="form-group" title="Назначить срок выполнения">
+                    <input id="date-deadline" type="datetime-local" class="form-control" name="date" required>
+                </div>
+                <button type="submit" class="btn btn-outline-info">Отправить</button>
+            </form>
+
+        {% endif %}
+        </div>
         <div class="message-info">
             <div class="message-info-content">
                 <div class="action-button">
                     {% if data.open_order %}
                         <button type="button"
-                                onclick="location.href='{% url 'message_open_order' message_id=data.id %}'"
-                                class="btn btn-outline-secondary btn-sm" disabled>Принять
+                                onclick="location.href='{% url 'applications:message_open_order' message_id=data.id %}'"
+                                class="btn btn-outline-secondary btn-sm mb-3" disabled>Принять
                         </button>
                     {% elif data.close_order %}
                         <button type="button"
-                                onclick="location.href='{% url 'message_open_order' message_id=data.id %}'"
-                                class="btn btn-outline-info btn-sm">Вернуть в работу
+                                onclick="location.href='{% url 'applications:message_open_order' message_id=data.id %}'"
+                                class="btn btn-outline-info btn-sm mb-3">Вернуть в работу
                         </button>
                     {% else %}
                         <button type="button"
-                                onclick="location.href='{% url 'message_open_order' message_id=data.id %}'"
-                                class="btn btn-outline-info btn-sm">Принять
+                                onclick="location.href='{% url 'applications:message_open_order' message_id=data.id %}'"
+                                class="btn btn-outline-info btn-sm mb-3">Принять
                         </button>
                     {% endif %}
-                    {#                        <button type="button" onclick="location.href='{% url 'new' message_id=data.id %}'" class="btn btn-outline-info btn-sm" name="close">Закрыть</button>#}
+                    <!-- dropdown-menu -->
+                    {#                    <div class="btn-group">#}
+                    {#                        <button type="button" class="btn btn-outline-info btn-sm dropdown-toggle"#}
+                    {#                                data-bs-toggle="dropdown"#}
+                    {#                                aria-expanded="false">#}
+                    {#                            Назначить#}
+                    {#                        </button>#}
+                    {#                        <ul class="dropdown-menu">#}
+                    {#                            {% for user in users_from_active_group %}#}
+                    {#                                <li><a class="dropdown-item" href="#">{{ user.get_full_name }} </a></li>#}
+                    {#                            {% endfor %}#}
+                    {#                        </ul>#}
+                    {#                    </div>#}
+
+                    <!-- dropdown-menu end-->
                 </div>
                 <h6>Отправитель - {{ data.sender_name }}</h6>
                 <p class="mb-1"><small><b>Создана</b> - {{ data.datetime_send }}</small></p>
                 <p class="mb-1"><small><b>Принята</b> - {{ data.date_accepted }}</small></p>
+                <p class="mb-1"><small><b>Назначена на</b> - {{ data.specialist }}</small></p>
 
                 {% if data.is_past_due and data.open_order %}
                     <p class="mb-1 message-bad-period"><small><b>Срок</b> - {{ data.control_period }}</small></p>
@@ -63,19 +103,23 @@
                         <hr>
                         <li class="list-group-item list-group-item-light"
                             aria-current="true"><b>Закрыта по категориям:</b></li>
-                        {% for category in category.choice.all %}
-                            <li class="list-group-item list-group-item-primary"
-                                aria-current="true"><small>{{ category.get_name_display }}</small></li>
-                        {% endfor %}
-                        <li class="list-group-item list-group-item-light"
-                            aria-current="true"><p><small><b>Комментарий:</b></small></p>
-                            <small>{{ category.comment }}</small></li>
+
+                        {% if category %}
+                            {% for category in category.choice.all %}
+                                <li class="list-group-item list-group-item-primary"
+                                    aria-current="true"><small>{{ category.get_name_display }}</small></li>
+                            {% endfor %}
+                            <li class="list-group-item list-group-item-light"
+                                aria-current="true"><p><small><b>Комментарий:</b></small></p>
+                                <small>{{ category.comment }}</small></li>
+                        {% else %}
+                            -
+                        {% endif %}
 
                     </ul>
 
                 {% else %}
                     <p class="mb-1 message-close-red"><small><b>Закрыта</b> - {{ data.date_complited }}</small></p>
-
                 {% endif %}
             </div>
             {#            <div class="message-attachments">#}
@@ -117,7 +161,8 @@
                         {#                          class="link-info p-2 border rounded-3 bs-popover-right">{{ attach.name }}</a></p>#}
                         <div class="col">
                             <div class="card border-light mb-3 change-card" style="width: 6rem;">
-                                <div class="card-header" title="{{ attach.name }}"><small>{{ attach.name|truncatechars:13 }}</small></div>
+                                <div class="card-header" title="{{ attach.name }}">
+                                    <small>{{ attach.name|truncatechars:13 }}</small></div>
                                 <a href="{{ dir }}{{ attach.link }}">
                                     <img src="{{ dir }}{{ attach.link }}" class="card-img-top"
                                          alt="{{ attach.slice_string }}"></a>
@@ -130,10 +175,12 @@
                 </div>
             </div>
         </div>
-        <div class="card">
+        <div class="card chat-bg">
             <div class="card-header">Общение с {{ data.sender_name }}</div>
             <div class="card-body height3">
                 <ul class="chat-list">
+                    <a href="{% url "applications:send_email" message_id=data.id %}"
+                       class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-75-hover">Ответить</a>
                     {% for cont in chat_data %}
                         {% if cont.sender_id == 1 %}
                             <li class="in">
@@ -150,7 +197,6 @@
 
                     </li>
                     {% endfor %}
-                    <a href="{% url "send_email" message_id=data.id %}" class="link-primary">Ответить</a>
                 </ul>
             </div>
         </div>
